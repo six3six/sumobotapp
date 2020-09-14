@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e95dbe80-7329-4bcd-92b2-5d47c0ee18e3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +76,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600071287633</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add important Android Studio files">
+      <created>1600071721126</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1600071721126</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -95,10 +103,10 @@
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="854" y="320" width="271" height="480" key="AndroidProcessChooserDialog/72.27.1848.1053@72.27.1848.1053" timestamp="1599813655289" />
-    <state x="559" y="132" width="864" height="850" key="CommitChangelistDialog2" timestamp="1600071287550">
+    <state x="559" y="132" width="864" height="850" key="CommitChangelistDialog2" timestamp="1600071720980">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state x="559" y="132" width="864" height="850" key="CommitChangelistDialog2/72.27.1848.1053@72.27.1848.1053" timestamp="1600071287550" />
+    <state x="559" y="132" width="864" height="850" key="CommitChangelistDialog2/72.27.1848.1053@72.27.1848.1053" timestamp="1600071720980" />
     <state width="530" height="506" key="DebuggerActiveHint" timestamp="1599378333921">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
@@ -127,10 +135,10 @@
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="485" y="188" width="1022" height="737" key="SettingsEditor/72.27.1848.1053@72.27.1848.1053" timestamp="1600071613277" />
-    <state x="591" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1600071291578">
+    <state x="591" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1600071801813">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state x="591" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/72.27.1848.1053@72.27.1848.1053" timestamp="1600071291578" />
+    <state x="591" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/72.27.1848.1053@72.27.1848.1053" timestamp="1600071801813" />
     <state x="172" y="127" width="1648" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1599319529094">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
