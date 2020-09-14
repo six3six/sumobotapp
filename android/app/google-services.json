@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1090654773439",
+    "firebase_url": "https://sumobot-1ec17.firebaseio.com",
+    "project_id": "sumobot-1ec17",
+    "storage_bucket": "sumobot-1ec17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090654773439:android:6bb11699fb1715a814660a",
+        "android_client_info": {
+          "package_name": "fr.esieespace.sumobot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090654773439-qsklgu5mit4er9s0m5ke6n4pl7tj0om2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiw2iOHBwdj4vCAg7B8b-1YUZdQe7Kh-4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090654773439-qsklgu5mit4er9s0m5ke6n4pl7tj0om2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
