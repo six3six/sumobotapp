@@ -11,7 +11,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="sumobot">
+        android:label="Sumobot">
 
         <service
             android:name=".NotificationService"
