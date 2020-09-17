@@ -1,8 +1,14 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sumobot/robot.dart';
+
+import 'main.dart';
 
 class Robots extends StatefulWidget {
   final String edition;
@@ -13,8 +19,9 @@ class Robots extends StatefulWidget {
   State<StatefulWidget> createState() => RobotsState(edition);
 }
 
-class RobotsState extends State<Robots> {
+class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
   final String edition;
+  Random rand = Random();
 
   TextEditingController nameController = TextEditingController();
   String nameError;
@@ -28,11 +35,32 @@ class RobotsState extends State<Robots> {
         .collection("robots");
   }
 
-  Widget makeCard(BuildContext context, Image image, String name,
-      String description, String uid) {
+  final List<Tab> myTabs = <Tab>[
+    Tab(text: 'Tout'),
+    Tab(text: 'Mes robots'),
+  ];
+
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: myTabs.length);
+    _tabController.index = 1;
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget makeCard(BuildContext context, String name, String description,
+      String uid, String owner) {
+    File imageFile = File(tmpFile.path + "/robots/" + uid + ".jpg");
     return Card(
       child: InkWell(
-        splashColor: Colors.red.withAlpha(30),
+        splashColor: Theme.of(context).buttonColor,
         onTap: () {
           Navigator.push(
             context,
@@ -48,7 +76,29 @@ class RobotsState extends State<Robots> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: image,
+              leading: imageFile.existsSync()
+                  ? Image.file(
+                      imageFile,
+                      fit: BoxFit.cover,
+                    )
+                  : FutureBuilder(
+                      future: FirebaseStorage.instance
+                          .ref()
+                          .child("robots")
+                          .child(FirebaseAuth.instance.currentUser.uid)
+                          .child(uid + ".jpg")
+                          .writeToFile(imageFile)
+                          .future,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Image.file(
+                            imageFile,
+                            fit: BoxFit.cover,
+                          );
+                        } else
+                          return const Text("");
+                      },
+                    ),
               title: Text(name),
               subtitle: Text(description),
             ),
@@ -62,46 +112,58 @@ class RobotsState extends State<Robots> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Robots"),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        child: Column(
-          children: [
-            FutureBuilder(
-              future: robots
-                  .where("owner",
-                      isEqualTo: FirebaseAuth.instance.currentUser.uid)
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                } else if (snapshot.hasData) {
-                  return Column(
-                      children: snapshot.data.documents
-                          .map<Widget>((DocumentSnapshot doc) => makeCard(
-                              context,
-                              Image.asset("assets/kit-sumobot.jpg"),
-                              doc.get("name"),
-                              "",
-                              doc.id))
-                          .toList());
-                } else {
-                  return const Text("Chargement...");
-                }
-              },
-            ),
-            RaisedButton(
-              child: Text(
-                "Ajouter un robot",
-              ),
-              textColor: Colors.white,
-              onPressed: () {
-                addRobotDialog(context);
-              },
-            ),
-          ],
+        title: const Text("Robots"),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: myTabs,
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: myTabs.map((Tab tab) {
+          Query query;
+          if (tab == myTabs[1])
+            query = robots.where("owner",
+                isEqualTo: FirebaseAuth.instance.currentUser.uid);
+          else
+            query = robots.orderBy("name");
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            child: Column(
+              children: [
+                FutureBuilder(
+                  future: query.get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    } else if (snapshot.hasData) {
+                      return Column(
+                          children: snapshot.data.documents
+                              .map<Widget>((DocumentSnapshot doc) => makeCard(
+                                  context,
+                                  doc.get("name"),
+                                  "",
+                                  doc.id,
+                                  doc.get("owner")))
+                              .toList());
+                    } else {
+                      return const Text("Chargement...");
+                    }
+                  },
+                ),
+                RaisedButton(
+                  child: const Text(
+                    "Ajouter un robot",
+                  ),
+                  textColor: Colors.white,
+                  onPressed: () {
+                    addRobotDialog(context);
+                  },
+                ),
+              ],
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -112,11 +174,11 @@ class RobotsState extends State<Robots> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Ajouter un robot'),
+          title: const Text('Ajouter un robot'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Entrez le nom du robot : '),
+                const Text('Entrez le nom du robot : '),
                 TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
@@ -129,7 +191,7 @@ class RobotsState extends State<Robots> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Ajouter'),
+              child: const Text('Ajouter'),
               onPressed: () {
                 robots
                     .add({

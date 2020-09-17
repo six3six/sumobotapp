@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sumobot/loby.dart';
 
 import 'login.dart';
@@ -21,6 +20,21 @@ class Loading extends State<AppLoad> {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
+      OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+      OneSignal.shared.init("4f82f3b1-777e-4b3d-a3cb-47f8a5585044",
+          iOSSettings: {
+            OSiOSSettings.autoPrompt: false,
+            OSiOSSettings.inAppLaunchUrl: false
+          });
+      OneSignal.shared
+          .setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+
+// The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+      await OneSignal.shared
+          .promptUserForPushNotificationPermission(fallbackToSettings: true);
+
       //await Future.delayed(Duration(seconds: 5));
     } catch (e) {
       setState(() {

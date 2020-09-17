@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sumobot/loby.dart';
 
+import 'main.dart';
+
 final double paddingInput = 25;
 
 class Login extends StatefulWidget {
@@ -159,9 +161,11 @@ class LoginFormState extends State<LoginForm> {
                 if (email.isEmpty || password.isEmpty) return;
 
                 try {
-                  UserCredential userCredential = await FirebaseAuth.instance
+                  await FirebaseAuth.instance
                       .signInWithEmailAndPassword(
                           email: email, password: password);
+                  analytics.logSignUp(signUpMethod: "password");
+
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'user-not-found') {
                     setState(() {

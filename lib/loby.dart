@@ -1,28 +1,58 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sumobot/edition.dart';
 import 'package:sumobot/profile.dart';
 import 'package:sumobot/robot_admin.dart';
 
 import 'login.dart';
 
-class Lobby extends StatelessWidget {
-  Lobby({Key key}) : super(key: key);
+class Lobby extends StatefulWidget {
+  @override
+  State<Lobby> createState() => LobbyState();
+}
+
+class LobbyState extends State<Lobby> {
+  User user = FirebaseAuth.instance.currentUser;
+  String userName = "";
+  bool isAdmin = false;
+
+  LobbyState() {
+    print(user.uid);
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .get()
+        .then((DocumentSnapshot document) => setState(() {
+              userName = document.get("name");
+              isAdmin = document.get("admin");
+            }));
+
+    OneSignal.shared.setEmail(email: user.email);
+    OneSignal.shared.consentGranted(true);
+
+    OneSignal.shared.getPermissionSubscriptionState().then((value) =>
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(user.uid)
+            .collection("notif")
+            .doc(value.subscriptionStatus.userId.characters.string)
+            .set({"true": true}));
+  }
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    var user = auth.currentUser;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Accueil"),
+        title: const Text("Accueil"),
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         children: [
           Text(
-            "Bonjour " + user?.displayName,
+            "Bonjour " + userName,
             style: Theme.of(context).textTheme.headline6,
             textAlign: TextAlign.left,
           ),
@@ -33,7 +63,7 @@ class Lobby extends StatelessWidget {
               ),
               LobbyButton(
                 text: "La compétition",
-                icon: Icon(Icons.thumb_up),
+                icon: const Icon(Icons.thumb_up),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Edition()),
@@ -53,25 +83,27 @@ class Lobby extends StatelessWidget {
               Container(
                 height: 20,
               ),
+              isAdmin
+                  ? LobbyButton(
+                      text: "Administration",
+                      icon: const Icon(Icons.settings),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RobotAdmin()),
+                      ),
+                    )
+                  : Container(),
+              Container(
+                height: 20,
+              ),
               LobbyButton(
-                text: "Déconnection",
-                icon: Icon(Icons.directions_run),
+                text: "Déconnexion",
+                icon: const Icon(Icons.directions_run),
                 onTap: () async {
                   await FirebaseAuth.instance.signOut();
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => Login()));
                 },
-              ),
-              Container(
-                height: 20,
-              ),
-              LobbyButton(
-                text: "Administration",
-                icon: Icon(Icons.settings),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RobotAdmin()),
-                ),
               ),
             ],
           )
