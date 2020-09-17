@@ -20,7 +20,6 @@ class LobbyState extends State<Lobby> {
   bool isAdmin = false;
 
   LobbyState() {
-    print(user.uid);
     FirebaseFirestore.instance
         .collection("users")
         .doc(user.uid)
@@ -32,14 +31,8 @@ class LobbyState extends State<Lobby> {
 
     OneSignal.shared.setEmail(email: user.email);
     OneSignal.shared.consentGranted(true);
-
-    OneSignal.shared.getPermissionSubscriptionState().then((value) =>
-        FirebaseFirestore.instance
-            .collection("users")
-            .doc(user.uid)
-            .collection("notif")
-            .doc(value.subscriptionStatus.userId.characters.string)
-            .set({"true": true}));
+    OneSignal.shared.setExternalUserId(user.uid);
+    OneSignal.shared.setSubscription(true);
   }
 
   @override
