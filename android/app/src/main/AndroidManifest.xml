@@ -13,15 +13,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Sumobot">
 
-        <service
-            android:name=".NotificationService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE">
-            <intent-filter>
-                <action android:name="com.onesignal.NotificationExtender" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
