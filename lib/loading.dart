@@ -61,6 +61,7 @@ class Loading extends State<AppLoad> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: paddingInput),
@@ -68,7 +69,7 @@ class Loading extends State<AppLoad> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/sumobot.png"),
+              Image.asset("assets/sumo_face_500.png", height: 100,),
               Container(
                 height: 20,
               ),

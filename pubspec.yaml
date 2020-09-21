@@ -76,6 +76,9 @@ flutter:
   assets:
     - assets/sumobot.png
     - assets/kit-sumobot.jpg
+    - assets/sumo_front.svg
+    - assets/sumo_face_200.png
+    - assets/sumo_face_500.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
