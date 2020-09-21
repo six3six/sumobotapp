@@ -69,7 +69,10 @@ class Loading extends State<AppLoad> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/sumo_face_500.png", height: 100,),
+              Image.asset(
+                "assets/sumo_face_500.png",
+                height: 100,
+              ),
               Container(
                 height: 20,
               ),

@@ -37,10 +37,13 @@ class App extends StatelessWidget {
         primaryColor: Colors.red[800],
         accentColor: Colors.redAccent[800],
 
-        buttonColor: Colors.red[800],
-
         inputDecorationTheme: InputDecorationTheme(
-          contentPadding: EdgeInsets.symmetric(vertical: 10),
+          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          border: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.elliptical(20, 20)),
+            gapPadding: 10.0,
+          ),
+          fillColor: Colors.white
         ),
 
         // Define the default font family.

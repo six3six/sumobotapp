@@ -3,5 +3,5 @@
     <item android:drawable="@color/redSumo" />
 
 
-    <item android:drawable="@drawable/ic_launcher_foreground" android:gravity="center" android:height="100dp" />
+    <item android:drawable="@drawable/ic_launcher_foreground" android:gravity="center" android:height="200dp" android:width="200dp" />
 </layer-list>

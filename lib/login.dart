@@ -43,18 +43,16 @@ class LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Login"),
-      ),
+      backgroundColor: Theme.of(context).primaryColor,
       body: SingleChildScrollView(
         child: Container(
           constraints: BoxConstraints(maxWidth: 700),
-          padding: EdgeInsets.symmetric(horizontal: 30),
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 60),
           child: Column(
             children: <Widget>[
               Container(
                 padding: EdgeInsets.symmetric(vertical: paddingInput),
-                child: Image.asset("assets/sumobot.png"),
+                child: Image.asset("assets/sumobot_blanc.png"),
               ),
               SizedBox(
                 width: double.infinity,
