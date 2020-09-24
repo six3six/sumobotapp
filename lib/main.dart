@@ -19,13 +19,17 @@ main() async {
 FirebaseAnalytics analytics = FirebaseAnalytics();
 
 class App extends StatelessWidget {
-  // This widget is the root of your application.
+  InputBorder inputBorder = UnderlineInputBorder(
+    borderSide: BorderSide(color: Colors.white, width: 1.0),
+  );
+
   @override
   Widget build(BuildContext context) {
     Crashlytics.instance.enableInDevMode = true;
     FlutterError.onError = Crashlytics.instance.recordFlutterError;
     getTemporaryDirectory().then((value) => tmpFile = value);
     analytics.logAppOpen();
+
     return MaterialApp(
       title: 'Sumobot',
       navigatorObservers: [
@@ -38,12 +42,34 @@ class App extends StatelessWidget {
         accentColor: Colors.redAccent[800],
 
         inputDecorationTheme: InputDecorationTheme(
-          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.elliptical(20, 20)),
-            gapPadding: 10.0,
+          filled: false,
+          hoverColor: Colors.white,
+          focusColor: Colors.white,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          labelStyle: TextStyle(color: Colors.white),
+          errorStyle: TextStyle(color: Colors.white70),
+          hintStyle: TextStyle(color: Colors.white),
+          prefixStyle: TextStyle(color: Colors.white),
+          suffixStyle: TextStyle(color: Colors.white),
+          helperStyle: TextStyle(color: Colors.white),
+          counterStyle: TextStyle(color: Colors.white),
+          focusedBorder: inputBorder,
+          enabledBorder: inputBorder,
+          errorBorder: inputBorder,
+          focusedErrorBorder: inputBorder,
+          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+        ),
+
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.transparent,
+          hoverColor: Colors.white60,
+          splashColor: Colors.white,
+          focusColor: Colors.white60,
+          highlightColor: Colors.white70,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.white, width: 2),
+            borderRadius: BorderRadius.circular(50),
           ),
-          fillColor: Colors.white
         ),
 
         // Define the default font family.
@@ -53,7 +79,6 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: AppLoad(),
-      // onGenerateRoute: router.generator,
     );
   }
 }

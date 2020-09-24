@@ -10,6 +10,8 @@ import 'main.dart';
 
 final double paddingInput = 25;
 
+TextStyle fieldTheme = TextStyle(color: Colors.white);
+
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
 
@@ -43,30 +45,42 @@ class LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: SingleChildScrollView(
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 700),
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 60),
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(vertical: paddingInput),
-                child: Image.asset("assets/sumobot_blanc.png"),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Text(
-                  errorMessage,
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .merge(TextStyle(color: Colors.red[800])),
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.centerRight,
+                end: Alignment.centerLeft,
+                colors: [Colors.redAccent[700], Colors.red[700]])),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: double.infinity),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 700),
+                padding: EdgeInsets.symmetric(horizontal: 30)
+                    .add(EdgeInsets.only(top: 50)),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: paddingInput),
+                      child: Image.asset("assets/sumobot_blanc.png"),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        errorMessage,
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .merge(TextStyle(color: Colors.red[800])),
+                      ),
+                    ),
+                    [LoginForm(), RegisterForm()].elementAt(_selectedIndex),
+                  ],
                 ),
               ),
-              [LoginForm(), RegisterForm()].elementAt(_selectedIndex),
-            ],
+            ),
           ),
         ),
       ),
@@ -118,9 +132,11 @@ class LoginFormState extends State<LoginForm> {
           padding: EdgeInsets.only(top: paddingInput),
           child: TextFormField(
             controller: emailInputController,
+            autocorrect: false,
+            style: fieldTheme,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-              hintText: 'Entrez votre email',
+              labelText: 'Email',
               errorText: emailErrorLabel,
             ),
           ),
@@ -129,19 +145,21 @@ class LoginFormState extends State<LoginForm> {
           padding: EdgeInsets.only(top: paddingInput),
           child: TextFormField(
             controller: passwordInputController,
+            style: fieldTheme,
             obscureText: true,
             decoration: InputDecoration(
-              hintText: 'Entrez votre mot de passe',
+              labelText: 'Mot de passe',
               errorText: passwordErrorLabel,
             ),
           ),
         ),
+        Container(height: 30),
         Container(
           padding: EdgeInsets.only(top: paddingInput),
           child: SizedBox(
             width: double.infinity,
             height: 50,
-            child: RaisedButton(
+            child: FlatButton(
               onPressed: () async {
                 emailErrorLabel = null;
                 passwordErrorLabel = null;
@@ -159,11 +177,9 @@ class LoginFormState extends State<LoginForm> {
                 if (email.isEmpty || password.isEmpty) return;
 
                 try {
-                  await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: email, password: password);
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: email, password: password);
                   analytics.logSignUp(signUpMethod: "password");
-
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'user-not-found') {
                     setState(() {
@@ -189,6 +205,7 @@ class LoginFormState extends State<LoginForm> {
             ),
           ),
         ),
+        Container(height: 30),
       ]),
     );
   }
@@ -205,7 +222,6 @@ class RegisterFormState extends State<RegisterForm> {
 
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
-  final confEmailController = TextEditingController();
   final passwordController = TextEditingController();
   final confPasswordController = TextEditingController();
   final nameController = TextEditingController();
@@ -223,8 +239,9 @@ class RegisterFormState extends State<RegisterForm> {
           padding: EdgeInsets.only(top: paddingInput),
           child: TextFormField(
             controller: nameController,
+            style: fieldTheme,
             decoration: InputDecoration(
-              hintText: 'Entrez votre nom',
+              labelText: 'Nom',
               errorText: nameError,
             ),
           ),
@@ -233,9 +250,11 @@ class RegisterFormState extends State<RegisterForm> {
           padding: EdgeInsets.only(top: paddingInput),
           child: TextFormField(
             controller: emailController,
+            style: fieldTheme,
+            autocorrect: false,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-              hintText: 'Entrez votre email',
+              labelText: 'Email',
               errorText: emailError,
             ),
           ),
@@ -243,20 +262,11 @@ class RegisterFormState extends State<RegisterForm> {
         Container(
           padding: EdgeInsets.only(top: paddingInput),
           child: TextFormField(
-            controller: confEmailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: 'Confirmez votre email',
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: paddingInput),
-          child: TextFormField(
             controller: passwordController,
+            style: fieldTheme,
             obscureText: true,
             decoration: InputDecoration(
-              hintText: 'Entrez votre mot de passe',
+              labelText: 'Mot de passe',
               errorText: passwordError,
             ),
           ),
@@ -265,18 +275,20 @@ class RegisterFormState extends State<RegisterForm> {
           padding: EdgeInsets.only(top: paddingInput),
           child: TextFormField(
             controller: confPasswordController,
+            style: fieldTheme,
             obscureText: true,
             decoration: const InputDecoration(
-              hintText: 'Confirmez votre mot de passe',
+              labelText: 'Mot de passe',
             ),
           ),
         ),
+        Container(height: 30),
         Container(
           padding: EdgeInsets.only(top: paddingInput),
           child: SizedBox(
             width: double.infinity,
             height: 50,
-            child: RaisedButton(
+            child: FlatButton(
               onPressed: () async {
                 emailError = null;
                 passwordError = null;
@@ -295,13 +307,6 @@ class RegisterFormState extends State<RegisterForm> {
                   nameError = "Merci de rentrer votre nom";
                 }
                 if (email.isEmpty || password.isEmpty || name.isEmpty) return;
-
-                if (email != confEmailController.text) {
-                  setState(() {
-                    emailError = "Les emails ne correspondent pas";
-                  });
-                  return;
-                }
 
                 if (password != confPasswordController.text) {
                   setState(() {
@@ -347,6 +352,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
           ),
         ),
+        Container(height: 30),
       ]),
     );
   }
