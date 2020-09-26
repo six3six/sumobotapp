@@ -12,27 +12,43 @@ import 'main.dart';
 
 class Robots extends StatefulWidget {
   final String edition;
+  final String editionName;
 
-  const Robots({Key key, this.edition}) : super(key: key);
+  const Robots({Key key, @required this.edition, @required this.editionName})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => RobotsState(edition);
+  State<StatefulWidget> createState() =>
+      RobotsState(this.edition, this.editionName);
 }
 
 class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
-  final String edition;
+  final String editionId;
+  final String editionName;
   Random rand = Random();
 
   TextEditingController nameController = TextEditingController();
   String nameError;
 
-  CollectionReference robots;
+  String error = "";
 
-  RobotsState(this.edition) {
-    this.robots = FirebaseFirestore.instance
-        .collection('editions')
-        .doc(edition)
+  bool loaded = false;
+
+  CollectionReference robotsRef;
+
+  Query allRobot;
+  Query myRobot;
+
+  RobotsState(this.editionId, this.editionName) {
+    robotsRef = FirebaseFirestore.instance
+        .collection("editions")
+        .doc(this.editionId)
         .collection("robots");
+
+    allRobot = robotsRef.orderBy("name");
+
+    myRobot = robotsRef.where("owner",
+        isEqualTo: FirebaseAuth.instance.currentUser.uid);
   }
 
   final List<Tab> myTabs = <Tab>[
@@ -66,7 +82,7 @@ class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
             context,
             MaterialPageRoute(
               builder: (context) => Robot(
-                edition: edition,
+                edition: this.editionId,
                 robotId: uid,
               ),
             ),
@@ -95,8 +111,13 @@ class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
                             imageFile,
                             fit: BoxFit.cover,
                           );
-                        } else
-                          return const Text("");
+                        } else if (snapshot.hasError) {
+                          return Text(
+                            "No image",
+                            textAlign: TextAlign.center,
+                          );
+                        }
+                        return CircularProgressIndicator();
                       },
                     ),
               title: Text(name),
@@ -110,9 +131,10 @@ class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print(this.error);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Robots"),
+        title: Text(this.editionName),
         bottom: TabBar(
           controller: _tabController,
           tabs: myTabs,
@@ -121,46 +143,48 @@ class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: myTabs.map((Tab tab) {
-          Query query;
-          if (tab == myTabs[1])
-            query = robots.where("owner",
-                isEqualTo: FirebaseAuth.instance.currentUser.uid);
-          else
-            query = robots.orderBy("name");
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            child: Column(
-              children: [
-                FutureBuilder(
+          Query query = tab == myTabs[0] ? allRobot : myRobot;
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              child: FutureBuilder(
                   future: query.get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    } else if (snapshot.hasData) {
-                      return Column(
-                          children: snapshot.data.documents
-                              .map<Widget>((DocumentSnapshot doc) => makeCard(
-                                  context,
-                                  doc.get("name"),
-                                  "",
-                                  doc.id,
-                                  doc.get("owner")))
-                              .toList());
-                    } else {
-                      return const Text("Chargement...");
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    Column c = Column(
+                      children: !snapshot.hasData
+                          ? [
+                              Center(
+                                  child: Text(snapshot.hasError
+                                      ? snapshot.error
+                                      : "Chargement"))
+                            ]
+                          : snapshot.data.docs
+                              .map<Widget>((QueryDocumentSnapshot doc) =>
+                                  makeCard(context, doc.get("name"), "", doc.id,
+                                      doc.get("owner")))
+                              .toList(),
+                    );
+
+                    if (snapshot.data.docs.length == 0) {
+                      c.children.add(Text(
+                        "La liste est vide \u{1F622}\n\nAjoutez dès maintenant votre robot !\n",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline5,
+                      ));
                     }
-                  },
-                ),
-                RaisedButton(
-                  child: const Text(
-                    "Ajouter un robot",
-                  ),
-                  textColor: Colors.white,
-                  onPressed: () {
-                    addRobotDialog(context);
-                  },
-                ),
-              ],
+                    if (tab == myTabs[1]) {
+                      c.children.add(RaisedButton(
+                        child: const Text(
+                          "Ajouter un robot",
+                        ),
+                        textColor: Colors.white,
+                        onPressed: () {
+                          addRobotDialog(context);
+                        },
+                      ));
+                    }
+                    return c;
+                  }),
             ),
           );
         }).toList(),
@@ -193,7 +217,7 @@ class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
             FlatButton(
               child: const Text('Ajouter'),
               onPressed: () {
-                robots
+                robotsRef
                     .add({
                       "owner": FirebaseAuth.instance.currentUser.uid,
                       "name": nameController.text,
@@ -214,6 +238,6 @@ class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(StringProperty('edition', edition));
+    properties.add(StringProperty('edition', editionId));
   }
 }

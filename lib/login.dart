@@ -12,6 +12,30 @@ final double paddingInput = 25;
 
 TextStyle fieldTheme = TextStyle(color: Colors.white);
 
+InputBorder inputBorder = UnderlineInputBorder(
+  borderSide: BorderSide(color: Colors.white, width: 1.0),
+);
+
+InputDecorationTheme loginInputDecorationTheme = InputDecorationTheme(
+  filled: false,
+  hoverColor: Colors.white,
+  focusColor: Colors.white,
+  floatingLabelBehavior: FloatingLabelBehavior.always,
+  labelStyle: TextStyle(color: Colors.white),
+  errorStyle: TextStyle(color: Colors.white70),
+  hintStyle: TextStyle(color: Colors.white),
+  prefixStyle: TextStyle(color: Colors.white),
+  suffixStyle: TextStyle(color: Colors.white),
+  helperStyle: TextStyle(color: Colors.white),
+  counterStyle: TextStyle(color: Colors.white),
+  focusedBorder: inputBorder,
+  enabledBorder: inputBorder,
+  errorBorder: inputBorder,
+  focusedErrorBorder: inputBorder,
+  contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+);
+
+
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
 
@@ -70,7 +94,8 @@ class LoginState extends State<Login> {
                       child: Text(
                         errorMessage,
                         textAlign: TextAlign.left,
-                        style: Theme.of(context)
+                        style: Theme
+                            .of(context)
                             .textTheme
                             .bodyText1
                             .merge(TextStyle(color: Colors.red[800])),
@@ -138,7 +163,7 @@ class LoginFormState extends State<LoginForm> {
             decoration: InputDecoration(
               labelText: 'Email',
               errorText: emailErrorLabel,
-            ),
+            ).applyDefaults(loginInputDecorationTheme),
           ),
         ),
         Container(
@@ -150,7 +175,7 @@ class LoginFormState extends State<LoginForm> {
             decoration: InputDecoration(
               labelText: 'Mot de passe',
               errorText: passwordErrorLabel,
-            ),
+            ).applyDefaults(loginInputDecorationTheme),
           ),
         ),
         Container(height: 30),
@@ -201,6 +226,7 @@ class LoginFormState extends State<LoginForm> {
                 }
               },
               textColor: Colors.white,
+
               child: Text('Se connecter'),
             ),
           ),
@@ -243,7 +269,7 @@ class RegisterFormState extends State<RegisterForm> {
             decoration: InputDecoration(
               labelText: 'Nom',
               errorText: nameError,
-            ),
+            ).applyDefaults(loginInputDecorationTheme),
           ),
         ),
         Container(
@@ -256,7 +282,7 @@ class RegisterFormState extends State<RegisterForm> {
             decoration: InputDecoration(
               labelText: 'Email',
               errorText: emailError,
-            ),
+            ).applyDefaults(loginInputDecorationTheme),
           ),
         ),
         Container(
@@ -268,7 +294,7 @@ class RegisterFormState extends State<RegisterForm> {
             decoration: InputDecoration(
               labelText: 'Mot de passe',
               errorText: passwordError,
-            ),
+            ).applyDefaults(loginInputDecorationTheme),
           ),
         ),
         Container(
@@ -279,7 +305,7 @@ class RegisterFormState extends State<RegisterForm> {
             obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Mot de passe',
-            ),
+            ).applyDefaults(loginInputDecorationTheme),
           ),
         ),
         Container(height: 30),
@@ -318,7 +344,7 @@ class RegisterFormState extends State<RegisterForm> {
                 try {
                   UserCredential userCredential = await FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
-                          email: email, password: password);
+                      email: email, password: password);
                   FirebaseFirestore.instance
                       .collection("users")
                       .doc(userCredential.user.uid)

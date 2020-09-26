@@ -1,40 +1,53 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isAdmin(userId) {
-    	let address = /databases/$(database)/documents/users/$(userId);
-      
-      return request.auth != null && get(address) != null && get(address).data.admin == false;
+  
+  	function isAuth() {
+    	return request.auth != null;
     }
+    
+    function isAdmin() {
+    	let address = /databases/$(database)/documents/roles/admins;
+      return isAuth() && (request.auth.uid in get(address));
+    }
+    
+    function isOwner(owner) {
+    	return isAuth() && request.auth.uid == owner;
+    }
+    
     
     match /{document=**} {
       allow read, write: if false;
     }
+    
+    match /roles/{document=**} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
 
-    match /users/{document} {
-      allow read : if request.auth != null;
-      allow write : if request.auth != null && document == request.auth.uid;
-      
-      allow read, write : if isAdmin(request.auth.uid);
+    match /{path=**}/robots/{robot} {
+      allow read: if isAuth();
+    }
+
+    match /users/{userId} {
+      allow read : if isAuth();
+      allow write : if isOwner(userId);
+
+      allow read, write : if isAdmin();
     }
     match /users/{userId}/notif/{document} {
-      allow read, write : if request.auth != null && request.auth.uid == userId;
-      allow read, write : if isAdmin(request.auth.uid);
+      allow read, write : if isOwner(userId);
+      allow read, write : if isAdmin();
     }
     match /editions/{document} {
-    	allow read : if request.auth != null;
+    	allow read : if isAuth();
     }
-    match /editions/{edition}/robots/{document} {
-    	allow read : if request.auth != null;
-      // Doit avoir un nom et appartenir à l'utilisateur
-      allow create : if request.auth != null && "name" in request.resource.data && request.resource.data.owner == request.auth.uid;
-    	allow update, delete : if request.auth != null && "name" in request.resource.data && resource.data.owner == request.auth.uid;
-     
-      allow write : if isAdmin(request.auth.uid);
-    }
-    match /editions/{edition}/robots/{robot}/status/{document} {
-    	allow read : if request.auth.uid == get(/databases/$(database)/documents/editions/$(edition)/robots/$(robot)).data.owner || isAdmin(request.auth.uid);
-      allow write : if isAdmin(request.auth.uid);
+
+    match /editions/{edition}/robots/{robot} {
+    	allow read : if isAuth();
+      allow write: if isOwner(request.resource.data["owner"]);
+      
+      allow read, write : if isAdmin();
     }
   }
 }

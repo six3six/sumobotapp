@@ -17,7 +17,9 @@ class Lobby extends StatefulWidget {
 class LobbyState extends State<Lobby> {
   User user = FirebaseAuth.instance.currentUser;
   String userName = "";
-  bool isAdmin = false;
+  bool showAdmin = false;
+
+  String error;
 
   LobbyState() {
     FirebaseFirestore.instance
@@ -26,8 +28,14 @@ class LobbyState extends State<Lobby> {
         .get()
         .then((DocumentSnapshot document) => setState(() {
               userName = document.get("name");
-              isAdmin = document.get("admin");
-            }));
+            }))
+        .catchError((error) => setState(() => this.error += error + "\r"));
+
+    isAdmin(user.uid)
+        .then((value) => setState(() {
+              showAdmin = value;
+            }))
+        .catchError((error) => setState(() => this.error += error + "\r"));
 
     OneSignal.shared.setEmail(email: user.email);
     OneSignal.shared.consentGranted(true);
@@ -76,7 +84,7 @@ class LobbyState extends State<Lobby> {
               Container(
                 height: 20,
               ),
-              isAdmin
+              showAdmin
                   ? LobbyButton(
                       text: "Administration",
                       icon: const Icon(Icons.settings),

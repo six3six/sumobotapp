@@ -19,9 +19,7 @@ main() async {
 FirebaseAnalytics analytics = FirebaseAnalytics();
 
 class App extends StatelessWidget {
-  InputBorder inputBorder = UnderlineInputBorder(
-    borderSide: BorderSide(color: Colors.white, width: 1.0),
-  );
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,44 +36,18 @@ class App extends StatelessWidget {
       theme: ThemeData(
         // Define the default brightness and colors.
         brightness: Brightness.light,
-        primaryColor: Colors.red[800],
-        accentColor: Colors.redAccent[800],
-
-        inputDecorationTheme: InputDecorationTheme(
-          filled: false,
-          hoverColor: Colors.white,
-          focusColor: Colors.white,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          labelStyle: TextStyle(color: Colors.white),
-          errorStyle: TextStyle(color: Colors.white70),
-          hintStyle: TextStyle(color: Colors.white),
-          prefixStyle: TextStyle(color: Colors.white),
-          suffixStyle: TextStyle(color: Colors.white),
-          helperStyle: TextStyle(color: Colors.white),
-          counterStyle: TextStyle(color: Colors.white),
-          focusedBorder: inputBorder,
-          enabledBorder: inputBorder,
-          errorBorder: inputBorder,
-          focusedErrorBorder: inputBorder,
-          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-        ),
+        primaryColor: Colors.red[700],
+        accentColor: Colors.red[900],
 
         buttonTheme: ButtonThemeData(
-          buttonColor: Colors.transparent,
-          hoverColor: Colors.white60,
-          splashColor: Colors.white,
-          focusColor: Colors.white60,
-          highlightColor: Colors.white70,
+          buttonColor: Colors.red[800],
+          height: 38,
           shape: RoundedRectangleBorder(
             side: BorderSide(color: Colors.white, width: 2),
             borderRadius: BorderRadius.circular(50),
           ),
         ),
 
-        // Define the default font family.
-        fontFamily: 'Helvetica',
-
-        primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: AppLoad(),

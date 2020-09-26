@@ -20,6 +20,7 @@ class Edition extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => Robots(
                 edition: uid,
+                editionName: name,
               ),
             ),
           );

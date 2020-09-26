@@ -1,6 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+
+Future<bool> isAdmin(String uid) async {
+  DocumentSnapshot doc =
+      await FirebaseFirestore.instance.doc("roles/admins").get();
+  Map<String, dynamic> data = doc.data();
+  return data.containsKey(uid);
+}
 
 class Profile extends StatelessWidget {
   Profile({Key key}) : super(key: key);
