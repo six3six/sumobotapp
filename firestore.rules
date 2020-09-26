@@ -39,16 +39,23 @@ service cloud.firestore {
       allow read, write : if isOwner(userId);
       allow read, write : if isAdmin();
     }
-    match /editions/{document} {
+    match /editions/{edition} {
     	allow read : if isAuth();
+
+      match /robots/{robot} {
+        allow read : if isAuth();
+        allow create : if isOwner(request.resource.data.owner);
+        allow write, delete: if isOwner(resource.data.owner);
+        allow read, write : if isAdmin();
+
+        match /status/{status} {
+        	allow read : if isAuth();
+          allow write : if isAdmin();
+        }
+      }
     }
 
-    match /editions/{edition}/robots/{robot} {
-    	allow read : if isAuth();
-      allow write: if isOwner(request.resource.data["owner"]);
-      
-      allow read, write : if isAdmin();
-    }
+
   }
 }
 

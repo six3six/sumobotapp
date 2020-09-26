@@ -165,7 +165,7 @@ class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
                               .toList(),
                     );
 
-                    if (snapshot.data.docs.length == 0) {
+                    if (snapshot.data?.docs?.length == 0) {
                       c.children.add(Text(
                         "La liste est vide \u{1F622}\n\nAjoutez dès maintenant votre robot !\n",
                         textAlign: TextAlign.center,
@@ -179,7 +179,9 @@ class RobotsState extends State<Robots> with SingleTickerProviderStateMixin {
                         ),
                         textColor: Colors.white,
                         onPressed: () {
-                          addRobotDialog(context);
+                          setState(() {
+                            addRobotDialog(context);
+                          });
                         },
                       ));
                     }
