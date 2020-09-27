@@ -1,4 +1,6 @@
 import * as functions from 'firebase-functions';
+import * as https from 'https';
+import * as OnesignalKey from './onesignal';
 
 const firebaseAdmin = require('firebase-admin');
 firebaseAdmin.initializeApp();
@@ -10,28 +12,51 @@ export const helloWorld = functions.https.onRequest((request, response) => {
     response.send("Hello from Firebase!");
 });
 
-export const addUser = functions.firestore.document("users/{userId}").onWrite(async (change, context) => {
-    const data = change.after.data();
-    const name = data?.name;
-    const email = data?.email;
-    const admin = data?.admin;
+export const sendMessage = functions.https.onRequest((request, response) => {
 
-    if (name === undefined || email === undefined || admin === undefined) return null;
+    const message = {
+        app_id: "4f82f3b1-777e-4b3d-a3cb-47f8a5585044",
+        headings: {en: "En garde ! C'est l'heure du du-du-du-duel !"},
+        contents: {"en": request.body.robotName + " est attendu pour combattre contre " + request.body.advRobotName},
+        include_external_user_ids: [request.body.userId],
+        channel_for_external_user_ids: "push",
+    };
 
-    if (admin !== false && !(await UserIsAdmin(context.auth?.uid))) {
-        return change.after.ref.set({
-            email: email,
-            name: name,
-            admin: false
-        }, {merge: true});
-    }
+    const headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization" : "Basic " + OnesignalKey.OnesignalKey
+    };
 
-    return change.after;
+    const options = {
+        host: "onesignal.com",
+        port: 443,
+        path: "/api/v1/notifications",
+        method: "POST",
+        headers: headers
+    };
+
+    const req = https.request(options, function (res) {
+        res.on('data', function (responseData) {
+            console.log("Response:");
+            console.log(responseData.toString());
+        });
+    });
+
+    req.on('error', function (e) {
+        console.log("ERROR:");
+        console.log(e);
+    });
+
+    req.write(JSON.stringify(message));
+    req.end();
+
+    response.send("ok");
 });
+
 
 export async function UserIsAdmin(userUid: string | undefined): Promise<boolean> {
     if (userUid === undefined) return false;
-    const user = await db.doc("users/" + userUid).get();
-    return user.get("admin") === true;
+    const user = await db.collection("roles").doc("roles").get();
+    return user.get("userUid") !== undefined;
 }
 
