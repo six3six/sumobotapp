@@ -1,3 +1,4 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sumobot/edition.dart';
 import 'package:sumobot/profile.dart';
-import 'package:sumobot/robot_admin.dart';
+import 'package:sumobot/robot.dart';
 
 import 'login.dart';
 
@@ -17,7 +18,7 @@ class Lobby extends StatefulWidget {
 class LobbyState extends State<Lobby> {
   User user = FirebaseAuth.instance.currentUser;
   String userName = "";
-  bool showAdmin = false;
+  bool admin = false;
 
   String error;
 
@@ -31,11 +32,16 @@ class LobbyState extends State<Lobby> {
             }))
         .catchError((error) => setState(() => this.error += error + "\r"));
 
-    isAdmin(user.uid)
-        .then((value) => setState(() {
-              showAdmin = value;
-            }))
-        .catchError((error) => setState(() => this.error += error + "\r"));
+    FirebaseFirestore.instance
+        .collection("roles")
+        .doc("admins")
+        .snapshots()
+        .forEach((element) async {
+      admin = await isAdmin(user.uid);
+      setState(() {
+        print("update");
+      });
+    });
 
     OneSignal.shared.setEmail(email: user.email);
     OneSignal.shared.consentGranted(true);
@@ -45,6 +51,63 @@ class LobbyState extends State<Lobby> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> tiles = List<Widget>();
+    tiles.addAll(
+      makeTile(
+        "La compétition",
+        const Icon(Icons.thumb_up),
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Edition()),
+        ),
+      ),
+    );
+
+    tiles.addAll(
+      makeTile(
+        "Mon compte",
+        const Icon(Icons.account_circle),
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Profile()),
+        ),
+      ),
+    );
+
+    if (this.admin) {
+      tiles.addAll(
+        makeTile(
+          "Scanner",
+          const Icon(Icons.qr_code_scanner),
+          () async {
+            var result = await BarcodeScanner.scan();
+            List<String> data = result.rawContent.split(";");
+            if (data.length != 2) return;
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Robot(
+                  edition: data[0],
+                  robotId: data[1],
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    tiles.addAll(
+      makeTile(
+        "Déconnexion",
+        const Icon(Icons.directions_run),
+        () async {
+          await FirebaseAuth.instance.signOut();
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => Login()));
+        },
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Accueil"),
@@ -53,7 +116,7 @@ class LobbyState extends State<Lobby> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         children: [
           Text(
-            "Bonjour " + userName,
+            "Bonjour\r\n" + userName,
             style: Theme.of(context).textTheme.headline6,
             textAlign: TextAlign.left,
           ),
@@ -62,55 +125,30 @@ class LobbyState extends State<Lobby> {
               Container(
                 height: 20,
               ),
-              LobbyButton(
-                text: "La compétition",
-                icon: const Icon(Icons.thumb_up),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Edition()),
-                ),
-              ),
-              Container(
-                height: 20,
-              ),
-              LobbyButton(
-                text: "Mon compte",
-                icon: Icon(Icons.account_circle),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Profile()),
-                ),
-              ),
-              Container(
-                height: 20,
-              ),
-              showAdmin
-                  ? LobbyButton(
-                      text: "Administration",
-                      icon: const Icon(Icons.settings),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RobotAdmin()),
-                      ),
-                    )
-                  : Container(),
-              Container(
-                height: 20,
-              ),
-              LobbyButton(
-                text: "Déconnexion",
-                icon: const Icon(Icons.directions_run),
-                onTap: () async {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => Login()));
-                },
-              ),
-            ],
+            ]..addAll(tiles),
           )
         ],
       ),
     );
+  }
+
+  List<Widget> makeTile(String name, Icon icon, Function() onTap) {
+    List<Widget> list = List<Widget>();
+    list.add(
+      LobbyButton(
+        text: name,
+        icon: icon,
+        onTap: onTap,
+      ),
+    );
+
+    list.add(
+      Container(
+        height: 20,
+      ),
+    );
+
+    return list;
   }
 }
 
