@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sumobot/loby.dart';
+import 'package:vibration/vibration.dart';
 
 import 'login.dart';
 
@@ -29,6 +30,18 @@ class Loading extends State<AppLoad> {
           });
       OneSignal.shared
           .setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+      OneSignal.shared.setNotificationReceivedHandler((notification) async {
+        if (await Vibration.hasVibrator()) {
+          await Future.delayed(Duration(seconds: 2));
+          Vibration.vibrate(
+              pattern: [0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000],
+              amplitude: 255);
+        }
+      });
+      OneSignal.shared.setNotificationOpenedHandler((openedResult) {
+        Vibration.cancel();
+      });
 
       await OneSignal.shared
           .promptUserForPushNotificationPermission(fallbackToSettings: true);

@@ -43,10 +43,7 @@ class LobbyState extends State<Lobby> {
       });
     });
 
-    OneSignal.shared.setEmail(email: user.email);
-    OneSignal.shared.consentGranted(true);
     OneSignal.shared.setExternalUserId(user.uid);
-    OneSignal.shared.setSubscription(true);
   }
 
   @override
