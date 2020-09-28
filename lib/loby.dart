@@ -75,7 +75,7 @@ class LobbyState extends State<Lobby> {
       tiles.addAll(
         makeTile(
           "Scanner",
-          const Icon(Icons.qr_code_scanner),
+          const Icon(Icons.scanner),
           () async {
             var result = await BarcodeScanner.scan();
             List<String> data = result.rawContent.split(";");
