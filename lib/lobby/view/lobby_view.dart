@@ -18,39 +18,49 @@ class LobbyView extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         children: [
-          BlocBuilder<LobbyCubit, String>(
+          BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               return Text(
-                "Bonjour\r\n $state",
+                "Bonjour\r\n${state.user.name}",
                 style: textTheme.headline6,
                 textAlign: TextAlign.left,
               );
             },
           ),
-          Column(children: [
-            Container(
-              height: 20,
-            ),
-          ]),
-          FlatButton(
-              onPressed: () => context
+          const SizedBox(height: 30),
+          _Card(
+              text: "La compétition",
+              icon: const Icon(Icons.thumb_up),
+              onTap: () => null),
+          const SizedBox(height: 10),
+          _Card(
+              text: "Mon compte",
+              icon: const Icon(Icons.account_circle),
+              onTap: () => null),
+          const SizedBox(height: 10),
+          _Card(
+              text: "Déconnexion",
+              icon: const Icon(Icons.directions_run),
+              onTap: () => context
                   .bloc<AuthenticationBloc>()
-                  .add(AuthenticationLogoutRequested()),
-              child: Text("Logout")),
-          BlocBuilder<AuthenticationBloc, AuthenticationState>(builder: (context, AuthenticationState state) {
-
-            return Text(
-              "Bonjour\r\n ${state.isAdmin}",
-            );
-          },),
+                  .add(AuthenticationLogoutRequested())),
+          const SizedBox(height: 10),
+          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, AuthenticationState state) {
+              return _Card(
+                  text: "Scanner",
+                  icon: const Icon(Icons.scanner),
+                  onTap: () => null);
+            },
+          ),
         ],
       ),
     );
   }
 }
 
-class LobbyButton extends StatelessWidget {
-  LobbyButton({Key key, this.text, this.icon, this.onTap}) : super(key: key);
+class _Card extends StatelessWidget {
+  _Card({Key key, this.text, this.icon, this.onTap}) : super(key: key);
 
   final String text;
   final Icon icon;
@@ -67,7 +77,7 @@ class LobbyButton extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: icon,
-              title: new Text(text),
+              title: Text(text),
             ),
             Container(
               height: 20,
