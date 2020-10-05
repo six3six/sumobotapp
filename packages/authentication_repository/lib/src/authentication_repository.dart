@@ -47,6 +47,7 @@ class AuthenticationRepository {
     }
   }
 
+
   /// Creates a new user with the provided [email] and [password].
   ///
   /// Throws a [SignUpFailure] if an exception occurs.
