@@ -14,4 +14,11 @@ class FirestoreEditionsRepository extends EditionsRepository {
                 Edition.fromEntity(EditionEntity.fromSnapshot(doc)))
             .toList());
   }
+
+  @override
+  Stream<Edition> edition(String uid) {
+    return editionCollection.doc(uid).get().asStream().map(
+        (DocumentSnapshot snapshot) =>
+            Edition.fromEntity(EditionEntity.fromSnapshot(snapshot)));
+  }
 }

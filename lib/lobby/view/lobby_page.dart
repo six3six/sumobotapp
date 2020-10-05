@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
+import 'package:sumobot/editions/views/editions_page.dart';
 
 class LobbyPage extends StatelessWidget {
   static Route route() {
@@ -32,7 +33,7 @@ class LobbyPage extends StatelessWidget {
           _Card(
               text: "La compétition",
               icon: const Icon(Icons.thumb_up),
-              onTap: () => null),
+              onTap: () => Navigator.of(context).push<void>(EditionsPage.route())),
           const SizedBox(height: 10),
           _Card(
               text: "Mon compte",
