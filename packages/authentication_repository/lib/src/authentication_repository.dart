@@ -136,6 +136,8 @@ class AuthenticationRepository {
       throw LogOutFailure();
     }
   }
+
+
 }
 
 extension on firebase_auth.User {
@@ -154,21 +156,14 @@ extension on firebase_auth.User {
 
     String name = "";
     try {
-      DocumentSnapshot user = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(uid)
-          .get();
+      DocumentSnapshot user =
+          await FirebaseFirestore.instance.collection("users").doc(uid).get();
       name = user.get("name");
-    } catch(e) {
+    } catch (e) {
       name = displayName;
     }
 
-
     return User(
-        id: uid,
-        admin: admin,
-        email: email,
-        name: name,
-        photo: photoURL);
+        id: uid, admin: admin, email: email, name: name, photo: photoURL);
   }
 }
