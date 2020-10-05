@@ -42,11 +42,10 @@ class AuthenticationRepository {
   /// Emits [User.empty] if the user is not authenticated.
   Stream<User> get user async* {
     final Stream<firebase_auth.User> stream = _firebaseAuth.authStateChanges();
-    await for( firebase_auth.User firebaseUser in stream ){
+    await for (firebase_auth.User firebaseUser in stream) {
       yield firebaseUser == null ? User.empty : await firebaseUser.toUser;
     }
   }
-
 
   /// Creates a new user with the provided [email] and [password].
   ///
@@ -152,11 +151,24 @@ extension on firebase_auth.User {
     } on StateError {
       admin = false;
     }
+
+    String name = "";
+    try {
+      DocumentSnapshot user = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .get();
+      name = user.get("name");
+    } catch(e) {
+      name = displayName;
+    }
+
+
     return User(
         id: uid,
         admin: admin,
         email: email,
-        name: displayName,
+        name: name,
         photo: photoURL);
   }
 }
