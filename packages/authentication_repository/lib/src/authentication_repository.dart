@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
@@ -26,11 +27,14 @@ class AuthenticationRepository {
   AuthenticationRepository({
     firebase_auth.FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
+    FirebaseFirestore firestore,
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
+        _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final FirebaseFirestore _firestore;
 
   /// Stream of [User] which will emit the current user when
   /// the authentication state changes.
@@ -48,13 +52,16 @@ class AuthenticationRepository {
   Future<void> signUp({
     @required String email,
     @required String password,
+    @required String name,
   }) async {
-    assert(email != null && password != null);
+    assert(email != null && password != null && name != null);
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      final firebase_auth.UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      await addUserInDatabase(userCredential.user.uid, name, email);
     } on Exception {
       throw SignUpFailure();
     }
@@ -65,16 +72,36 @@ class AuthenticationRepository {
   /// Throws a [LogInWithEmailAndPasswordFailure] if an exception occurs.
   Future<void> logInWithGoogle() async {
     try {
-      final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser.authentication;
-      final credential = firebase_auth.GoogleAuthProvider.credential(
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final firebase_auth.OAuthCredential credential =
+          firebase_auth.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      await _firebaseAuth.signInWithCredential(credential);
+      final firebase_auth.UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(credential);
+      if (!await userExistInDatabase(userCredential.user.uid))
+        addUserInDatabase(
+            userCredential.user.uid, googleUser.displayName, googleUser.email);
     } on Exception {
       throw LogInWithGoogleFailure();
     }
+  }
+
+  Future<void> addUserInDatabase(
+      String userUid, String name, String email) async {
+    await _firestore.collection("users").doc(userUid).set({
+      "name": name,
+      "email": email,
+    });
+  }
+
+  Future<bool> userExistInDatabase(String userUid) async {
+    DocumentSnapshot doc =
+        await _firestore.collection("users").doc(userUid).get();
+    return doc.exists;
   }
 
   /// Signs in with the provided [email] and [password].

@@ -2,11 +2,11 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
 
 import '../cubit/lobby_cubbit.dart';
 
 class LobbyView extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -31,7 +31,18 @@ class LobbyView extends StatelessWidget {
             Container(
               height: 20,
             ),
-          ])
+          ]),
+          FlatButton(
+              onPressed: () => context
+                  .bloc<AuthenticationBloc>()
+                  .add(AuthenticationLogoutRequested()),
+              child: Text("Logout")),
+          BlocBuilder<AuthenticationBloc, AuthenticationState>(builder: (context, AuthenticationState state) {
+
+            return Text(
+              "Bonjour\r\n ${state.isAdmin}",
+            );
+          },),
         ],
       ),
     );

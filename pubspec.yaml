@@ -37,6 +37,9 @@ dependencies:
   image_picker: ^0.6.7+7
   path_provider: ^1.6.14
   equatable: ^1.2.3
+  formz: ^0.3.1
+
+  font_awesome_flutter: ^8.8.1
 
   firebase_core: ^0.5.0
 
