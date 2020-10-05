@@ -8,23 +8,12 @@ abstract class AuthenticationEvent extends Equatable {
 }
 
 class AuthenticationUserChanged extends AuthenticationEvent {
-  const AuthenticationUserChanged(this.user, this.isAdmin);
+  const AuthenticationUserChanged(this.user);
 
   final User user;
-  final bool isAdmin;
 
   @override
-  List<Object> get props => [user, isAdmin];
+  List<Object> get props => [user];
 }
-
-class AuthenticationRoleChanged extends AuthenticationEvent {
-  const AuthenticationRoleChanged(this.isAdmin);
-
-  final bool isAdmin;
-
-  @override
-  List<Object> get props => [isAdmin];
-}
-
 
 class AuthenticationLogoutRequested extends AuthenticationEvent {}

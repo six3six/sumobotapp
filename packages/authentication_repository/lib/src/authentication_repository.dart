@@ -40,10 +40,11 @@ class AuthenticationRepository {
   /// the authentication state changes.
   ///
   /// Emits [User.empty] if the user is not authenticated.
-  Stream<User> get user {
-    return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      return firebaseUser == null ? User.empty : firebaseUser.toUser;
-    });
+  Stream<User> get user async* {
+    final Stream<firebase_auth.User> stream = _firebaseAuth.authStateChanges();
+    await for( firebase_auth.User firebaseUser in stream ){
+      yield firebaseUser == null ? User.empty : await firebaseUser.toUser;
+    }
   }
 
   /// Creates a new user with the provided [email] and [password].
@@ -138,7 +139,23 @@ class AuthenticationRepository {
 }
 
 extension on firebase_auth.User {
-  User get toUser {
-    return User(id: uid, email: email, name: displayName, photo: photoURL);
+  Future<User> get toUser async {
+    bool admin = false;
+    try {
+      final DocumentSnapshot admins = await FirebaseFirestore.instance
+          .collection("roles")
+          .doc("admins")
+          .get();
+      admins.data().keys.contains(uid);
+      admin = true;
+    } on StateError {
+      admin = false;
+    }
+    return User(
+        id: uid,
+        admin: admin,
+        email: email,
+        name: displayName,
+        photo: photoURL);
   }
 }

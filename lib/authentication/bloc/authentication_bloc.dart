@@ -18,24 +18,9 @@ class AuthenticationBloc
   })  : assert(authenticationRepository != null),
         _authenticationRepository = authenticationRepository,
         super(const AuthenticationState.unknown()) {
-    final DocumentReference adminRef =
-        FirebaseFirestore.instance.collection("roles").doc("admins");
-
     _userSubscription = _authenticationRepository.user.listen(
       (user) async {
-        if (user == User.empty) {
-          add(AuthenticationUserChanged(user, false));
-        } else {
-          final DocumentSnapshot adminSnapshot = await adminRef.get();
-          bool isAdmin = false;
-          try {
-            adminSnapshot.get(user.id);
-            isAdmin = true;
-          } on StateError {
-            isAdmin = false;
-          }
-          add(AuthenticationUserChanged(user, isAdmin));
-        }
+        add(AuthenticationUserChanged(user));
       },
     );
   }
@@ -49,8 +34,6 @@ class AuthenticationBloc
   ) async* {
     if (event is AuthenticationUserChanged) {
       yield _mapAuthenticationUserChangedToState(event);
-    } else if (event is AuthenticationRoleChanged) {
-      yield _mapAuthenticationRoleChangedToState(event);
     } else if (event is AuthenticationLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
     }
@@ -66,13 +49,8 @@ class AuthenticationBloc
     AuthenticationUserChanged event,
   ) {
     return event.user != User.empty
-        ? AuthenticationState.authenticated(event.user, event.isAdmin)
+        ? AuthenticationState.authenticated(event.user)
         : const AuthenticationState.unauthenticated();
   }
 
-  AuthenticationState _mapAuthenticationRoleChangedToState(
-    AuthenticationRoleChanged event,
-  ) {
-    return AuthenticationState.authenticated(this.state.user, event.isAdmin);
-  }
 }

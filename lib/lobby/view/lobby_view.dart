@@ -47,10 +47,12 @@ class LobbyView extends StatelessWidget {
           const SizedBox(height: 10),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, AuthenticationState state) {
-              return _Card(
-                  text: "Scanner",
-                  icon: const Icon(Icons.scanner),
-                  onTap: () => null);
+              return state.user.admin
+                  ? _Card(
+                      text: "Scanner",
+                      icon: const Icon(Icons.scanner),
+                      onTap: () => null)
+                  : SizedBox();
             },
           ),
         ],
