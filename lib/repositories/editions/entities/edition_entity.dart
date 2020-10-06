@@ -29,7 +29,7 @@ class EditionEntity extends Equatable {
   static EditionEntity fromSnapshot(DocumentSnapshot snapshot) => EditionEntity(
         snapshot.id,
         snapshot.get("name") as String,
-        snapshot.get("date") as DateTime,
+        (snapshot.get("date") as Timestamp).toDate(),
       );
 
   Map<String, Object> toDocument() => {

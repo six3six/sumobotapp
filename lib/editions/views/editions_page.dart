@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sumobot/editions/cubit/editions_cubit.dart';
+import 'package:sumobot/repositories/editions/firestore_editions_repository.dart';
+
+import 'editions_view.dart';
 
 class EditionsPage extends StatelessWidget {
   static Route route() {
@@ -10,14 +15,16 @@ class EditionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Editions"),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        children: [],
-      ),
-    );
+    return RepositoryProvider(
+        create: (context) => FirestoreEditionsRepository(),
+        child: BlocProvider(
+          create: (context) =>
+              EditionsCubit(context.repository<FirestoreEditionsRepository>()),
+          child: Scaffold(
+              appBar: AppBar(
+                title: const Text("Editions"),
+              ),
+              body: EditionsView()),
+        ));
   }
 }
