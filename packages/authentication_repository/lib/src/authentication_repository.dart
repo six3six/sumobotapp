@@ -137,7 +137,35 @@ class AuthenticationRepository {
     }
   }
 
+  Future<bool> getUserRole(String uid) async {
+    bool admin = false;
+    try {
+      final DocumentSnapshot admins = await FirebaseFirestore.instance
+          .collection("roles")
+          .doc("admins")
+          .get();
+      admins.data().keys.contains(uid);
+      admin = true;
+    } on StateError {
+      admin = false;
+    }
+    return admin;
+  }
 
+  Future<User> getUserFromUid(String uid) async {
+    final DocumentSnapshot snapshot =
+        await _firestore.collection("users").doc(uid).get();
+
+    if (!snapshot.exists) return User.empty;
+    final data = snapshot.data();
+    return User(
+      email:  data["email"] as String ?? "",
+      id: uid,
+      admin: await getUserRole(uid),
+      name: data["name"] as String ?? "",
+      photo: null,
+    );
+  }
 }
 
 extension on firebase_auth.User {

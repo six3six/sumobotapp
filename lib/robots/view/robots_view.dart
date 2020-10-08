@@ -75,6 +75,7 @@ class _SearchBar extends StatelessWidget {
     return CupertinoTextField(
       keyboardType: TextInputType.text,
       placeholder: "Search..",
+      onChanged: (text) => context.bloc<RobotsCubit>().search(text),
       placeholderStyle: TextStyle(
         color: Color(0xffC4C6CC),
         fontSize: 14.0,
@@ -112,7 +113,7 @@ class _RobotList extends StatelessWidget {
             (BuildContext context, int index) {
               return _RobotItem(state.robots[index % state.robots.length]);
             },
-            childCount: state.robots.length * 100,
+            childCount: state.robots.length * 1,
           ),
         );
       },
@@ -137,7 +138,7 @@ class _RobotItem extends StatelessWidget {
             ListTile(
               leading: CircularProgressIndicator(),
               title: Text(robot.name),
-              subtitle: Text(robot.owner),
+              subtitle: Text(robot.owner.name),
             ),
           ],
         ),

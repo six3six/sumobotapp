@@ -1,3 +1,4 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
@@ -22,7 +23,7 @@ class RobotsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => FirestoreRobotsRepository(edition),
+      create: (context) => FirestoreRobotsRepository(edition, context.repository<AuthenticationRepository>()),
       child: BlocProvider(
         create: (context) => RobotsCubit(
           context.repository<FirestoreRobotsRepository>(),

@@ -10,9 +10,8 @@ class EditionsCubit extends Cubit<EditionsState> {
   final EditionsRepository _editionsRepository;
 
   Future<void> update() async {
-    emit(state.resetEditions());
     _editionsRepository.editions().listen((List<Edition> editions) {
-      emit(state.addEditions(editions));
+      emit(EditionsState(editions: editions));
     });
   }
 }

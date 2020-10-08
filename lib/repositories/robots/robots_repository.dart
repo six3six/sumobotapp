@@ -7,5 +7,7 @@ abstract class RobotsRepository {
 
   Stream<List<Robot>> robots();
 
-  Future<void> updateTodo(Robot robot);
+  Stream<List<Robot>> robotsSearch(String search);
+
+  Future<void> updateRobot(Robot robot);
 }

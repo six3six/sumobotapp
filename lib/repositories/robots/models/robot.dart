@@ -1,3 +1,4 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
@@ -13,7 +14,7 @@ class Robot extends Equatable {
         assert(name != null),
         assert(owner != null);
 
-  final String owner;
+  final User owner;
   final String name;
   final String uid;
   final Edition edition;
@@ -21,16 +22,16 @@ class Robot extends Equatable {
   static const empty = Robot(
     uid: '',
     name: '',
-    owner: '',
+    owner: User.empty,
     edition: Edition.empty,
   );
 
-
-  static Robot fromEntity(RobotEntity entity, Edition edition) {
+  static Future<Robot> fromEntity(RobotEntity entity, Edition edition,
+      AuthenticationRepository authenticationRepository) async {
     return Robot(
       uid: entity.id,
       name: entity.name,
-      owner: entity.owner,
+      owner: await authenticationRepository.getUserFromUid(entity.owner),
       edition: edition,
     );
   }

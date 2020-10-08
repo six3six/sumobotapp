@@ -7,11 +7,13 @@ class RobotsState extends Equatable {
   final List<Robot> robots;
   final bool isSearching;
   final Edition edition;
+  final String search;
 
   const RobotsState({
     this.robots = const <Robot>[],
     this.isSearching = false,
     this.edition = Edition.empty,
+    this.search = "",
   });
 
   RobotsState resetRobots() {
@@ -36,15 +38,16 @@ class RobotsState extends Equatable {
     bool isSearching,
     List<Robot> robots,
     Edition edition,
+    String search,
   }) {
-    print(isSearching);
     return RobotsState(
       isSearching: isSearching ?? this.isSearching,
       robots: robots ?? this.robots,
       edition: edition ?? this.edition,
+      search: search ?? this.search,
     );
   }
 
   @override
-  List<Object> get props => [robots, isSearching];
+  List<Object> get props => [robots, isSearching, search, edition];
 }
