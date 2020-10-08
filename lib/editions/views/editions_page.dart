@@ -16,15 +16,17 @@ class EditionsPage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return RepositoryProvider(
-        create: (context) => FirestoreEditionsRepository(),
-        child: BlocProvider(
-          create: (context) =>
-              EditionsCubit(context.repository<FirestoreEditionsRepository>()),
-          child: Scaffold(
-              appBar: AppBar(
-                title: const Text("Editions"),
-              ),
-              body: EditionsView()),
-        ));
+      create: (context) => FirestoreEditionsRepository(),
+      child: BlocProvider(
+        create: (context) =>
+            EditionsCubit(context.repository<FirestoreEditionsRepository>()),
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Editions"),
+          ),
+          body: EditionsView(),
+        ),
+      ),
+    );
   }
 }

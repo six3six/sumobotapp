@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:sumobot/editions/cubit/editions_cubit.dart';
 import 'package:sumobot/editions/cubit/editions_state.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
+import 'package:sumobot/robots/view/robots_page.dart';
 
 class EditionsView extends StatelessWidget {
   @override
@@ -36,7 +37,7 @@ class _EditionCard extends StatelessWidget {
     return Card(
       child: InkWell(
         splashColor: Colors.blue.withAlpha(30),
-        onTap: () {},
+        onTap: () => Navigator.of(context).push(RobotsPage.route(edition)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

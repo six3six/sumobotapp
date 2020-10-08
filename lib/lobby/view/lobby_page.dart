@@ -33,7 +33,8 @@ class LobbyPage extends StatelessWidget {
           _Card(
               text: "La compétition",
               icon: const Icon(Icons.thumb_up),
-              onTap: () => Navigator.of(context).push<void>(EditionsPage.route())),
+              onTap: () =>
+                  Navigator.of(context).push<void>(EditionsPage.route())),
           const SizedBox(height: 10),
           _Card(
               text: "Mon compte",
