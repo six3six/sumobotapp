@@ -44,6 +44,10 @@ class _EditionCard extends StatelessWidget {
             ListTile(
               title: new Text(edition.name),
               subtitle: Text(_editionFormat.format(edition.date)),
+              leading: Image.network(
+                'https://r-cf.bstatic.com/images/hotel/max1024x768/116/116281457.jpg',
+                fit: BoxFit.fitWidth,
+              ),
             ),
           ],
         ),

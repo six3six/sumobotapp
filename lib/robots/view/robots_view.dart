@@ -2,37 +2,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
+import 'package:sumobot/repositories/robots/models/robot.dart';
 import 'package:sumobot/robots/cubit/robots_cubit.dart';
 import 'package:sumobot/robots/cubit/robots_state.dart';
 
 class RobotsView extends StatelessWidget {
-  final Edition edition;
-
-  const RobotsView({Key key, @required this.edition})
-      : assert(edition != null),
-        super(key: key);
+  const RobotsView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    context.bloc<RobotsCubit>().update();
+
     return CustomScrollView(
       slivers: [
-        _AppBar(
-          edition: edition,
-        )
+        _AppBar(),
+        _RobotList(),
       ],
     );
   }
 }
 
 class _AppBar extends StatelessWidget {
-  final Edition edition;
-
-  const _AppBar({Key key, @required this.edition}) : super(key: key);
+  const _AppBar({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      pinned: true,
+      pinned: false,
       expandedHeight: 150.0,
       actions: <Widget>[
         RawMaterialButton(
@@ -47,24 +43,26 @@ class _AppBar extends StatelessWidget {
         ),
       ],
       flexibleSpace: BlocBuilder<RobotsCubit, RobotsState>(
-        buildWhen: (RobotsState prev, RobotsState next) =>  prev.isSearching != next.isSearching,
+          buildWhen: (RobotsState prev, RobotsState next) =>
+              prev.isSearching != next.isSearching ||
+              prev.edition != next.edition,
           builder: (BuildContext context, RobotsState state) {
-          print(state.isSearching);
-        return FlexibleSpaceBar(
-          centerTitle: state.isSearching,
-          title: Container(
-              padding: EdgeInsets.only(bottom: 2),
-              constraints: BoxConstraints(minHeight: 40, maxHeight: 40),
-              width: 220,
-              child: state.isSearching
-                  ? const _SearchBar()
-                  : Text("${edition.name}")),
-          background: Image.network(
-            'https://r-cf.bstatic.com/images/hotel/max1024x768/116/116281457.jpg',
-            fit: BoxFit.fitWidth,
-          ),
-        );
-      }),
+            print(state.isSearching);
+            return FlexibleSpaceBar(
+              centerTitle: state.isSearching,
+              title: Container(
+                  padding: EdgeInsets.only(bottom: 2),
+                  constraints: BoxConstraints(minHeight: 40, maxHeight: 40),
+                  width: 220,
+                  child: state.isSearching
+                      ? const _SearchBar()
+                      : Text("${state.edition.name}")),
+              background: Image.network(
+                'https://r-cf.bstatic.com/images/hotel/max1024x768/116/116281457.jpg',
+                fit: BoxFit.fitWidth,
+              ),
+            );
+          }),
     );
   }
 }
@@ -99,6 +97,50 @@ class _SearchBar extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         color: Colors.white,
+      ),
+    );
+  }
+}
+
+class _RobotList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RobotsCubit, RobotsState>(
+      builder: (BuildContext context, RobotsState state) {
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return _RobotItem(state.robots[index % state.robots.length]);
+            },
+            childCount: state.robots.length * 100,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _RobotItem extends StatelessWidget {
+  final Robot robot;
+
+  const _RobotItem(this.robot, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: InkWell(
+        splashColor: Theme.of(context).buttonColor,
+        onTap: () => null,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: CircularProgressIndicator(),
+              title: Text(robot.name),
+              subtitle: Text(robot.owner),
+            ),
+          ],
+        ),
       ),
     );
   }

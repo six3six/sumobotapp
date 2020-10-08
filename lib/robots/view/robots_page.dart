@@ -26,10 +26,10 @@ class RobotsPage extends StatelessWidget {
       child: BlocProvider(
         create: (context) => RobotsCubit(
           context.repository<FirestoreRobotsRepository>(),
+          edition,
         ),
         child: Scaffold(
           body: RobotsView(
-            edition: edition,
           ),
         ),
       ),
