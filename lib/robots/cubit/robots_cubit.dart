@@ -30,6 +30,10 @@ class RobotsCubit extends Cubit<RobotsState> {
     emit(state.copyWith(isSearching: false));
   }
 
+  void setPersonal(bool isPersonal) {
+    emit(state.copyWith(isPersonal: isPersonal));
+  }
+
   void update() {
     _subscription?.cancel();
     _subscription = _robotsRepository.robots().listen((List<Robot> robots) {
