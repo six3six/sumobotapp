@@ -19,9 +19,9 @@ class FirestoreRobotsRepository extends RobotsRepository {
   }
 
   @override
-  Future<void> addNewRobot(Robot robot) {
-    // TODO: implement addNewRobot
-    throw UnimplementedError();
+  Future<void> addNewRobot(Robot robot) async {
+    DocumentReference document = await robotCollection.add(robot.toEntity().toDocument());
+    print(document);
   }
 
   @override
@@ -31,15 +31,12 @@ class FirestoreRobotsRepository extends RobotsRepository {
   }
 
   @override
-  Stream<List<Robot>> robots() {
-    return _getRobotsFromQuery(robotCollection.orderBy("name"));
-  }
+  Stream<List<Robot>> robots({String search = "", User user}) {
+    Query query = robotCollection.orderBy("name");
+    if (user != null) query = query.where("owner", isEqualTo: user.id);
+    query = query.where("name", isGreaterThanOrEqualTo: search);
 
-  @override
-  Stream<List<Robot>> robotsSearch(String search) {
-    return _getRobotsFromQuery(robotCollection
-        .orderBy("name")
-        .where("name", isGreaterThanOrEqualTo: search));
+    return _getRobotsFromQuery(query);
   }
 
   Stream<List<Robot>> _getRobotsFromQuery(Query query) async* {

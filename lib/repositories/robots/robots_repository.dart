@@ -1,3 +1,5 @@
+import 'package:authentication_repository/authentication_repository.dart';
+
 import 'models/robot.dart';
 
 abstract class RobotsRepository {
@@ -5,9 +7,8 @@ abstract class RobotsRepository {
 
   Future<void> deleteRobot(Robot robot);
 
-  Stream<List<Robot>> robots();
+  Stream<List<Robot>> robots({String search, User user});
 
-  Stream<List<Robot>> robotsSearch(String search);
 
   Future<void> updateRobot(Robot robot);
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 import 'package:sumobot/repositories/robots/models/robot.dart';
@@ -8,11 +9,11 @@ import 'package:sumobot/repositories/robots/robots_repository.dart';
 import 'robots_state.dart';
 
 class RobotsCubit extends Cubit<RobotsState> {
-  RobotsCubit(this._robotsRepository, this._edition)
-      : super(RobotsState(edition: _edition));
+  RobotsCubit(this._robotsRepository, Edition _edition, this._user)
+      : assert(_robotsRepository != null), super(RobotsState(edition: _edition));
 
   final RobotsRepository _robotsRepository;
-  final Edition _edition;
+  final User _user;
 
   StreamSubscription _subscription;
 
@@ -21,8 +22,10 @@ class RobotsCubit extends Cubit<RobotsState> {
   }
 
   void setSearchModeToggle() {
-    if(state.isSearching) setNormalMode();
-    else setSearchMode();
+    if (state.isSearching)
+      setNormalMode();
+    else
+      setSearchMode();
   }
 
   void setNormalMode() {
@@ -32,18 +35,22 @@ class RobotsCubit extends Cubit<RobotsState> {
 
   void setPersonal(bool isPersonal) {
     emit(state.copyWith(isPersonal: isPersonal));
+    if (state.isSearching) search(state.search);
+    else update();
   }
 
   void update() {
     _subscription?.cancel();
-    _subscription = _robotsRepository.robots().listen((List<Robot> robots) {
+    _subscription = _robotsRepository.robots(user: state.isPersonal ? _user : null).listen((List<Robot> robots) {
       emit(state.copyWith(robots: robots));
     });
   }
 
   void search(String search) {
     _subscription?.cancel();
-    _subscription = _robotsRepository.robotsSearch(search).listen((List<Robot> robots) {
+    _subscription = _robotsRepository
+        .robots(search: search, user: state.isPersonal ? _user : null)
+        .listen((List<Robot> robots) {
       emit(state.copyWith(search: search, robots: robots));
     });
   }

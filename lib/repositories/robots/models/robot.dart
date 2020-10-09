@@ -35,6 +35,10 @@ class Robot extends Equatable {
       edition: edition,
     );
   }
+  
+  RobotEntity toEntity(){
+    return RobotEntity(uid, name, owner.id);
+  }
 
   @override
   List<Object> get props => [owner, name, uid, edition];
