@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 import '../entities/robot_entity.dart';
+import 'step.dart';
 
 class Robot extends Equatable {
   const Robot({
@@ -28,6 +29,7 @@ class Robot extends Equatable {
 
   static Future<Robot> fromEntity(RobotEntity entity, Edition edition,
       AuthenticationRepository authenticationRepository) async {
+
     return Robot(
       uid: entity.id,
       name: entity.name,

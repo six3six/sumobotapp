@@ -176,8 +176,8 @@ extension on firebase_auth.User {
           .collection("roles")
           .doc("admins")
           .get();
-      admins.data().keys.contains(uid);
-      admin = true;
+
+      admin = admins.data().keys.contains(uid);
     } on StateError {
       admin = false;
     }

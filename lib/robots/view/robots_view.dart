@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 import 'package:sumobot/repositories/robots/models/robot.dart';
+import 'package:sumobot/robot/view/robot_page.dart';
 import 'package:sumobot/robots/cubit/robots_cubit.dart';
 import 'package:sumobot/robots/cubit/robots_state.dart';
 
@@ -48,7 +49,6 @@ class _AppBar extends StatelessWidget {
               prev.isSearching != next.isSearching ||
               prev.edition != next.edition,
           builder: (BuildContext context, RobotsState state) {
-            print(state.isSearching);
             return FlexibleSpaceBar(
               centerTitle: state.isSearching,
               title: Container(
@@ -71,8 +71,7 @@ class _AppBar extends StatelessWidget {
 }
 
 class _SearchBar extends StatefulWidget {
-  _SearchBar(
-      {Key key, @required this.isSearching, @required this.edition})
+  _SearchBar({Key key, @required this.isSearching, @required this.edition})
       : super(key: key);
 
   final bool isSearching;
@@ -83,11 +82,8 @@ class _SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
-
   @override
   Widget build(BuildContext context) {
-
-    print("test" + widget.isSearching.toString());
     return AnimatedSizeAndFade(
       vsync: this,
       child: widget.isSearching
@@ -152,7 +148,7 @@ class _RobotItem extends StatelessWidget {
     return Card(
       child: InkWell(
         splashColor: Theme.of(context).buttonColor,
-        onTap: () => null,
+        onTap: () => Navigator.push(context, RobotPage.route(robot)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

@@ -10,6 +10,7 @@ import 'package:sumobot/repositories/robots/robots_repository.dart';
 import 'package:sumobot/robots/cubit/robots_cubit.dart';
 import 'package:sumobot/robots/cubit/robots_state.dart';
 
+import 'robots_add.dart';
 import 'robots_view.dart';
 
 class RobotsPage extends StatelessWidget {
@@ -62,7 +63,7 @@ class RobotsPage extends StatelessWidget {
                 onPressed: () => showDialog<void>(
                   context: context,
                   barrierDismissible: true,
-                  builder: (BuildContext context) => _AddRobot(
+                  builder: (BuildContext context) => RobotsAdd(
                     user: state.user,
                     edition: edition,
                   ),
@@ -73,58 +74,6 @@ class RobotsPage extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-class _AddRobot extends StatelessWidget {
-  _AddRobot({
-    Key key,
-    @required this.user,
-    @required this.edition,
-  })  : assert(edition != null),
-        assert(user != null),
-        super(key: key);
-
-  final User user;
-  final Edition edition;
-  final TextEditingController textEditingController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Ajouter un robot'),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            const Text('Entrez le nom du robot : '),
-            TextFormField(
-              controller: textEditingController,
-              decoration: const InputDecoration(
-                hintText: 'Nom',
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: const Text('Ajouter'),
-          onPressed: () async {
-            Robot robot = Robot(
-              owner: user,
-              name: textEditingController.text,
-              uid: "",
-              edition: edition,
-            );
-            RobotsRepository repo = FirestoreRobotsRepository(
-                edition, context.repository<AuthenticationRepository>());
-            print(repo);
-            repo.addNewRobot(robot);
-            Navigator.pop(context);
-          },
-        ),
-      ],
     );
   }
 }
