@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 
 class EditionsState extends Equatable {

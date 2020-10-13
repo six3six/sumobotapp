@@ -24,11 +24,11 @@ class RobotCubit extends Cubit<RobotState> {
 
   final picker = ImagePicker();
 
-  Future<void> delete(BuildContext context) {
-    showDialog(context: context, builder: (context) => AlertDialog(title: Text("Ceci n'est pas encore implémenté")));
+  void delete(BuildContext context) async {
+    await showDialog(context: context, builder: (context) => AlertDialog(title: Text("Ceci n'est pas encore implémenté")));
   }
 
-  Future<void> changePhoto() {
-    picker.getImage(source: ImageSource.gallery);
+  void changePhoto() async {
+    await picker.getImage(source: ImageSource.gallery);
   }
 }

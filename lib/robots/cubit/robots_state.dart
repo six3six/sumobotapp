@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 import 'package:sumobot/repositories/robots/models/robot.dart';
 
@@ -9,6 +8,7 @@ class RobotsState extends Equatable {
   final Edition edition;
   final String search;
   final bool isPersonal;
+  final bool isLoading;
 
   const RobotsState({
     this.robots = const <Robot>[],
@@ -16,6 +16,7 @@ class RobotsState extends Equatable {
     this.edition = Edition.empty,
     this.search = "",
     this.isPersonal = false,
+    this.isLoading = false,
   });
 
   RobotsState resetRobots() {
@@ -42,6 +43,7 @@ class RobotsState extends Equatable {
     Edition edition,
     String search,
     bool isPersonal,
+    bool isLoading,
   }) {
     return RobotsState(
       isSearching: isSearching ?? this.isSearching,
@@ -49,6 +51,7 @@ class RobotsState extends Equatable {
       edition: edition ?? this.edition,
       search: search ?? this.search,
       isPersonal: isPersonal ?? this.isPersonal,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 

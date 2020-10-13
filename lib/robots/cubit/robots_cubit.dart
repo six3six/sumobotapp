@@ -10,7 +10,8 @@ import 'robots_state.dart';
 
 class RobotsCubit extends Cubit<RobotsState> {
   RobotsCubit(this._robotsRepository, Edition _edition, this._user)
-      : assert(_robotsRepository != null), super(RobotsState(edition: _edition));
+      : assert(_robotsRepository != null),
+        super(RobotsState(edition: _edition, isLoading: true));
 
   final RobotsRepository _robotsRepository;
   final User _user;
@@ -34,24 +35,32 @@ class RobotsCubit extends Cubit<RobotsState> {
   }
 
   void setPersonal(bool isPersonal) {
-    emit(state.copyWith(isPersonal: isPersonal));
-    if (state.isSearching) search(state.search);
-    else update();
+    emit(state.copyWith(isPersonal: isPersonal, isLoading: true));
+    if (state.isSearching)
+      search(state.search);
+    else
+      update();
   }
 
   void update() {
+    emit(state.copyWith(isLoading: true));
+
     _subscription?.cancel();
-    _subscription = _robotsRepository.robots(user: state.isPersonal ? _user : null).listen((List<Robot> robots) {
-      emit(state.copyWith(robots: robots));
+    _subscription = _robotsRepository
+        .robots(user: state.isPersonal ? _user : null)
+        .listen((List<Robot> robots) {
+      emit(state.copyWith(robots: robots, isLoading: false));
     });
   }
 
   void search(String search) {
+    emit(state.copyWith(isLoading: true));
+
     _subscription?.cancel();
     _subscription = _robotsRepository
         .robots(search: search, user: state.isPersonal ? _user : null)
         .listen((List<Robot> robots) {
-      emit(state.copyWith(search: search, robots: robots));
+      emit(state.copyWith(search: search, robots: robots, isLoading: false));
     });
   }
 }

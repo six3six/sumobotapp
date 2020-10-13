@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:sumobot/repositories/robots/entities/step_entity.dart';
 
 class Step extends Equatable {

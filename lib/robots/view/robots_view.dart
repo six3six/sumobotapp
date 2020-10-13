@@ -50,7 +50,7 @@ class _AppBar extends StatelessWidget {
               prev.edition != next.edition,
           builder: (BuildContext context, RobotsState state) {
             return FlexibleSpaceBar(
-              centerTitle: state.isSearching,
+              centerTitle: true,
               title: Container(
                 padding: EdgeInsets.only(bottom: 2),
                 constraints: BoxConstraints(minHeight: 40, maxHeight: 40),
@@ -124,7 +124,23 @@ class _RobotList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RobotsCubit, RobotsState>(
+      buildWhen: (RobotsState prev, RobotsState next) =>
+          prev.isLoading != next.isLoading || prev.robots != next.robots,
       builder: (BuildContext context, RobotsState state) {
+        if (state.isLoading) {
+          return const SliverToBoxAdapter(
+            child: const Padding(
+              padding: const EdgeInsets.only(top: 50),
+              child: const Center(
+                child: const SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: const CircularProgressIndicator(),
+                ),
+              ),
+            ),
+          );
+        }
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
@@ -153,7 +169,7 @@ class _RobotItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: CircularProgressIndicator(),
+              leading: const CircularProgressIndicator(),
               title: Text(robot.name),
               subtitle: Text(robot.owner.name),
             ),

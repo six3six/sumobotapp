@@ -1,4 +1,3 @@
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 import 'package:sumobot/repositories/robots/entities/step_entity.dart';

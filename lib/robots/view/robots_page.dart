@@ -5,8 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 import 'package:sumobot/repositories/robots/firestore_robots_repository.dart';
-import 'package:sumobot/repositories/robots/models/robot.dart';
-import 'package:sumobot/repositories/robots/robots_repository.dart';
 import 'package:sumobot/robots/cubit/robots_cubit.dart';
 import 'package:sumobot/robots/cubit/robots_state.dart';
 
