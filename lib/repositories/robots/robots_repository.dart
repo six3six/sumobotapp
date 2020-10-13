@@ -9,6 +9,9 @@ abstract class RobotsRepository {
 
   Stream<List<Robot>> robots({String search, User user});
 
-
   Future<void> updateRobot(Robot robot);
+
+  Future<String> getImage(Robot robot);
+
+  Future<String> setImage(Robot robot, String image);
 }

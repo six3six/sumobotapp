@@ -43,4 +43,5 @@ class Robot extends Equatable {
 
   @override
   List<Object> get props => [owner, name, uid, edition];
+
 }

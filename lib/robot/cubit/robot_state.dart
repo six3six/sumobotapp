@@ -12,12 +12,12 @@ class RobotState extends Equatable {
         assert(image != null);
 
   final Robot robot;
-  final Image image;
+  final Widget image;
   final Step step;
 
   RobotState copyWith({
     Robot robot,
-    Image image,
+    Widget image,
     Step step,
   }) {
     return RobotState(

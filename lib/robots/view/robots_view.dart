@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:animated_size_and_fade/animated_size_and_fade.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
+import 'package:sumobot/repositories/robots/firestore_robots_repository.dart';
 import 'package:sumobot/repositories/robots/models/robot.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
 import 'package:sumobot/robots/cubit/robots_cubit.dart';
@@ -17,8 +21,8 @@ class RobotsView extends StatelessWidget {
 
     return CustomScrollView(
       slivers: [
-        _AppBar(),
-        _RobotList(),
+        const _AppBar(),
+        const _RobotList(),
       ],
     );
   }
@@ -52,8 +56,8 @@ class _AppBar extends StatelessWidget {
             return FlexibleSpaceBar(
               centerTitle: true,
               title: Container(
-                padding: EdgeInsets.only(bottom: 2),
-                constraints: BoxConstraints(minHeight: 40, maxHeight: 40),
+                padding: const EdgeInsets.only(bottom: 2),
+                constraints: const BoxConstraints(minHeight: 40, maxHeight: 40),
                 width: 220,
                 child: _SearchBar(
                   isSearching: state.isSearching,
@@ -71,7 +75,8 @@ class _AppBar extends StatelessWidget {
 }
 
 class _SearchBar extends StatefulWidget {
-  _SearchBar({Key key, @required this.isSearching, @required this.edition})
+  const _SearchBar(
+      {Key key, @required this.isSearching, @required this.edition})
       : super(key: key);
 
   final bool isSearching;
@@ -91,14 +96,14 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
               keyboardType: TextInputType.text,
               placeholder: "Search..",
               onChanged: (text) => context.bloc<RobotsCubit>().search(text),
-              placeholderStyle: TextStyle(
-                color: Color(0xffC4C6CC),
+              placeholderStyle: const TextStyle(
+                color: const Color(0xffC4C6CC),
                 fontSize: 14.0,
                 fontFamily: 'Brutal',
               ),
-              prefix: Padding(
+              prefix: const Padding(
                 padding: const EdgeInsets.fromLTRB(9.0, 6.0, 9.0, 6.0),
-                child: Icon(Icons.search),
+                child: const Icon(Icons.search),
               ),
               suffix: RawMaterialButton(
                 elevation: 0.0,
@@ -121,11 +126,11 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
 }
 
 class _RobotList extends StatelessWidget {
+  const _RobotList({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RobotsCubit, RobotsState>(
-      buildWhen: (RobotsState prev, RobotsState next) =>
-          prev.isLoading != next.isLoading || prev.robots != next.robots,
       builder: (BuildContext context, RobotsState state) {
         if (state.isLoading) {
           return const SliverToBoxAdapter(
@@ -141,16 +146,45 @@ class _RobotList extends StatelessWidget {
             ),
           );
         }
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return _RobotItem(state.robots[index]);
-            },
-            childCount: state.robots.length,
+        return SliverToBoxAdapter(
+          child: Column(
+            children: state.robots.map((Robot robot) => _RobotItem(robot)).toList(),
           ),
         );
       },
     );
+  }
+}
+
+class _RobotImage extends StatefulWidget {
+  final Robot robot;
+
+  _RobotImage({Key key, @required this.robot}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _RobotImageState();
+}
+
+class _RobotImageState extends State<_RobotImage> {
+  bool isCharged = false;
+  String imagePath = "";
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isCharged) {
+      final robotRepo = context.repository<FirestoreRobotsRepository>();
+      robotRepo.getImage(widget.robot).then((value) {
+        setState(() {
+          isCharged = true;
+          imagePath = value;
+        });
+      });
+      return const CircularProgressIndicator();
+    }
+
+    File image = File(imagePath);
+    if (image.existsSync()) return Image.file(image);
+    return const Icon(FontAwesomeIcons.question);
   }
 }
 
@@ -169,7 +203,9 @@ class _RobotItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: const CircularProgressIndicator(),
+              leading: new _RobotImage(
+                robot: robot,
+              ),
               title: Text(robot.name),
               subtitle: Text(robot.owner.name),
             ),

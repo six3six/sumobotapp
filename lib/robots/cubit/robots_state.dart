@@ -16,7 +16,7 @@ class RobotsState extends Equatable {
     this.edition = Edition.empty,
     this.search = "",
     this.isPersonal = false,
-    this.isLoading = false,
+    this.isLoading = true,
   });
 
   RobotsState resetRobots() {
@@ -56,5 +56,5 @@ class RobotsState extends Equatable {
   }
 
   @override
-  List<Object> get props => [robots, isSearching, search, isPersonal];
+  List<Object> get props => [robots, isSearching, search, isPersonal, isLoading];
 }

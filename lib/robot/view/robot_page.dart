@@ -32,7 +32,10 @@ class RobotPage extends StatelessWidget {
           builder: (BuildContext context, AuthenticationState state) {
             return BlocProvider(
               create: (context) => RobotCubit(
-                  robot, context.repository<FirestoreRobotsStepsRepository>()),
+                robot,
+                context.repository<FirestoreRobotsStepsRepository>(),
+                context.repository<FirestoreRobotsRepository>(),
+              ),
               child: Scaffold(
                 body: RobotView(),
               ),

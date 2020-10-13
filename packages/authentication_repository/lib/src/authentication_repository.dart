@@ -130,6 +130,7 @@ class AuthenticationRepository {
   Future<void> logOut() async {
     try {
       await Future.wait([
+        _googleSignIn.disconnect(),
         _firebaseAuth.signOut(),
       ]);
     } on Exception {

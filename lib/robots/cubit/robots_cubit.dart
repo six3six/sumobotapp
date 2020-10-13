@@ -35,7 +35,7 @@ class RobotsCubit extends Cubit<RobotsState> {
   }
 
   void setPersonal(bool isPersonal) {
-    emit(state.copyWith(isPersonal: isPersonal, isLoading: true));
+    emit(state.copyWith(isPersonal: isPersonal));
     if (state.isSearching)
       search(state.search);
     else
