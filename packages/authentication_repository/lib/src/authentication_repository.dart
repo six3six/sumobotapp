@@ -138,6 +138,10 @@ class AuthenticationRepository {
     }
   }
 
+  Future<void> changePassword(String newPassword) async {
+    await _firebaseAuth.currentUser.updatePassword(newPassword);
+  }
+
   Future<bool> getUserRole(String uid) async {
     bool admin = false;
     try {
@@ -160,7 +164,7 @@ class AuthenticationRepository {
     if (!snapshot.exists) return User.empty;
     final data = snapshot.data();
     return User(
-      email:  data["email"] as String ?? "",
+      email: data["email"] as String ?? "",
       id: uid,
       admin: await getUserRole(uid),
       name: data["name"] as String ?? "",
