@@ -252,7 +252,7 @@ class _QR extends StatelessWidget {
         builder: (BuildContext context, RobotState state) {
           return Center(
             child: QrImage(
-              data: state.robot.edition.uid + ";" + state.robot.uid,
+              data: "SUMOCODE;" + state.robot.edition.uid + ";" + state.robot.uid,
               version: QrVersions.auto,
               size: 300.0,
             ),

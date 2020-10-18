@@ -60,10 +60,13 @@ class LobbyPage extends StatelessWidget {
                       onTap: () async {
                         var result = await BarcodeScanner.scan();
                         List<String> data = result.rawContent.split(";");
-                        if (data.length != 2) return;
+                        if (data.length != 3 || data[0] != "SUMOCODE")
+                          return Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text("Ceci n'est pas un code SUMOBOT"),
+                          ));
                         final route = RobotPage.route(
-                          data[0],
                           data[1],
+                          data[2],
                         );
                         Navigator.of(context).push(route);
                       },
