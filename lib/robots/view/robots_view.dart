@@ -8,9 +8,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 import 'package:sumobot/repositories/robots/firestore_robots_repository.dart';
 import 'package:sumobot/repositories/robots/models/robot.dart';
+import 'package:sumobot/robot/cubit/robot_state.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
 import 'package:sumobot/robots/cubit/robots_cubit.dart';
 import 'package:sumobot/robots/cubit/robots_state.dart';
+import 'package:sumobot/theme.dart';
 
 class RobotsView extends StatelessWidget {
   const RobotsView({Key key}) : super(key: key);
@@ -39,7 +41,10 @@ class _AppBar extends StatelessWidget {
       actions: <Widget>[
         RawMaterialButton(
           elevation: 0.0,
-          child: const Icon(Icons.search),
+          child: const Icon(
+            Icons.search,
+            color: sumoRed,
+          ),
           onPressed: () => context.bloc<RobotsCubit>().setSearchModeToggle(),
           constraints: const BoxConstraints.tightFor(
             width: 56,
@@ -64,8 +69,8 @@ class _AppBar extends StatelessWidget {
                   edition: state.edition,
                 ),
               ),
-              background: Image.network(
-                'https://r-cf.bstatic.com/images/hotel/max1024x768/116/116281457.jpg',
+              background: Image.asset(
+                'assets/' + state.edition.uid + ".png",
                 fit: BoxFit.fitWidth,
               ),
             );
@@ -103,11 +108,17 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
               ),
               prefix: const Padding(
                 padding: const EdgeInsets.fromLTRB(9.0, 6.0, 9.0, 6.0),
-                child: const Icon(Icons.search),
+                child: const Icon(
+                  Icons.search,
+                  color: sumoRed,
+                ),
               ),
               suffix: RawMaterialButton(
                 elevation: 0.0,
-                child: const Icon(Icons.cancel),
+                child: const Icon(
+                  Icons.cancel,
+                  color: sumoRed,
+                ),
                 onPressed: () => context.bloc<RobotsCubit>().setNormalMode(),
                 constraints: const BoxConstraints.tightFor(
                   width: 56,
@@ -120,7 +131,26 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
                 color: Colors.white,
               ),
             )
-          : Text("${widget.edition.name}"),
+          : Stack(
+              children: [
+                Text(
+                  "${widget.edition.name}",
+                  style: Theme.of(context).textTheme.headline5.merge(TextStyle(
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 2
+                          ..color = Colors.black,
+                      )),
+                ),
+                Text(
+                  "${widget.edition.name}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .merge(TextStyle(color: sumoRed)),
+                ),
+              ],
+            ),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const Color sumoRed = const Color(0xffc62327);
+
 final theme = ThemeData(
 // Define the default brightness and colors.
   brightness: Brightness.light,
