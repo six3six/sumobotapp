@@ -1,7 +1,10 @@
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:barcode_scan/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
 import 'package:sumobot/editions/views/editions_page.dart';
+import 'package:sumobot/robot/view/robot_page.dart';
 
 class LobbyPage extends StatelessWidget {
   static Route route() {
@@ -54,7 +57,17 @@ class LobbyPage extends StatelessWidget {
                   ? _Card(
                       text: "Scanner",
                       icon: const Icon(Icons.scanner),
-                      onTap: () => null)
+                      onTap: () async {
+                        var result = await BarcodeScanner.scan();
+                        List<String> data = result.rawContent.split(";");
+                        if (data.length != 2) return;
+                        final route = RobotPage.route(
+                          data[0],
+                          data[1],
+                        );
+                        Navigator.of(context).push(route);
+                      },
+                    )
                   : const SizedBox();
             },
           ),

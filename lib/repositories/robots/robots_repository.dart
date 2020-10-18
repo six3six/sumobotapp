@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:sumobot/repositories/editions/models/edition.dart';
 
 import 'models/robot.dart';
 
@@ -14,4 +15,6 @@ abstract class RobotsRepository {
   Future<String> getImage(Robot robot);
 
   Future<String> setImage(Robot robot, String image);
+
+  Stream<Robot> getRobotByUid(String robot);
 }

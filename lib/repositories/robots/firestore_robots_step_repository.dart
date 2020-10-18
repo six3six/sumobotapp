@@ -9,12 +9,12 @@ class FirestoreRobotsStepsRepository extends RobotsStepsRepository {
   FirestoreRobotsStepsRepository(this.edition) {
     robotCollection = FirebaseFirestore.instance
         .collection("editions")
-        .doc(edition.uid)
+        .doc(edition)
         .collection('robots');
   }
 
   CollectionReference robotCollection;
-  Edition edition;
+  String edition;
 
   @override
   Future<void> add(Robot robot, Step step) {
@@ -32,6 +32,7 @@ class FirestoreRobotsStepsRepository extends RobotsStepsRepository {
   Stream<Step> step(Robot robot) async* {
     final snapshot =
         robotCollection.doc(robot.uid).collection("step").snapshots();
+
     await for (final query in snapshot) {
       Step step = Step();
       for (final doc in query.docs) {

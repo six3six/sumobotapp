@@ -4,6 +4,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sumobot/repositories/editions/editions_repository.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 
 import 'models/robot.dart';
@@ -12,13 +13,14 @@ import 'entities/robot_entity.dart';
 
 class FirestoreRobotsRepository extends RobotsRepository {
   CollectionReference robotCollection;
-  final Edition edition;
+  final String edition;
   final AuthenticationRepository authenticationRepository;
+  final EditionsRepository editionsRepository;
 
-  FirestoreRobotsRepository(this.edition, this.authenticationRepository) {
+  FirestoreRobotsRepository(this.edition, this.authenticationRepository, this.editionsRepository) {
     robotCollection = FirebaseFirestore.instance
         .collection("editions")
-        .doc(edition.uid)
+        .doc(edition)
         .collection('robots');
   }
 
@@ -30,9 +32,8 @@ class FirestoreRobotsRepository extends RobotsRepository {
   }
 
   @override
-  Future<void> deleteRobot(Robot robot) {
-    // TODO: implement deleteRobot
-    throw UnimplementedError();
+  Future<void> deleteRobot(Robot robot) async {
+    await robotCollection.doc(robot.uid).delete();
   }
 
   @override
@@ -45,6 +46,7 @@ class FirestoreRobotsRepository extends RobotsRepository {
   }
 
   Stream<List<Robot>> _getRobotsFromQuery(Query query) async* {
+    Edition edition = await editionsRepository.edition(this.edition).first;
     await for (QuerySnapshot querySnapshot in query.snapshots()) {
       List<Robot> robots = List<Robot>(querySnapshot.docs.length);
 
@@ -99,7 +101,6 @@ class FirestoreRobotsRepository extends RobotsRepository {
       return imageLocal.path;
     }
 
-
     if (metadata.updated.isAfter(lastMod)) {
       print("download $imageName");
       final TaskSnapshot snap = await robotRef.writeToFile(imageLocal);
@@ -112,14 +113,15 @@ class FirestoreRobotsRepository extends RobotsRepository {
   Future<String> setImage(Robot robot, String image) async {
     final String imageName = robot.uid + ".jpg";
 
-
     final Directory dataDir = await getApplicationDocumentsDirectory();
     if (!dataDir.existsSync()) {
       dataDir.createSync();
       dataDir.createTempSync();
     }
     final Directory imageDir = Directory(dataDir.path + "/robotImage");
-    final String imagePath = imageDir.path + "/" + imageName;
+    File prevImage = File(imageDir.path + "/" + imageName);
+
+    print(prevImage.path);
 
     if (!imageDir.existsSync()) imageDir.createSync();
 
@@ -129,11 +131,22 @@ class FirestoreRobotsRepository extends RobotsRepository {
         .child(robot.uid + ".jpg");
 
     final File newImage = File(image);
-    if (!newImage.existsSync()) return imagePath;
+    if (!newImage.existsSync()) return prevImage.path;
     await robotRef.putFile(newImage);
 
-    newImage.copySync(imagePath);
+    if (prevImage.existsSync()) prevImage.delete();
+    newImage.copySync(prevImage.path);
 
-    return imagePath;
+    return prevImage.path;
+  }
+
+  @override
+  Stream<Robot> getRobotByUid(String robot) async* {
+    Edition edition = await editionsRepository.edition(this.edition).first;
+    await for (DocumentSnapshot snapshot
+        in robotCollection.doc(robot).snapshots()) {
+      final RobotEntity entity = RobotEntity.fromSnapshot(snapshot);
+      yield await Robot.fromEntity(entity, edition, authenticationRepository);
+    }
   }
 }

@@ -4,8 +4,8 @@ import 'package:equatable/equatable.dart';
 enum StepStatus {
   UNKNOWN,
   OK,
-  PENDING,
   CANCELED,
+  PENDING,
 }
 
 class StepEntity extends Equatable {
@@ -32,7 +32,9 @@ class StepEntity extends Equatable {
 
   static StepEntity fromSnapshot(DocumentSnapshot snapshot) => StepEntity(
         snapshot.id,
-        StepStatus.values[snapshot.get("status") as int],
+        StepStatus.values.length > (snapshot.get("status") as int)
+            ? StepStatus.values[snapshot.get("status") as int]
+            : StepStatus.UNKNOWN,
       );
 
   Map<String, Object> toDocument() => {

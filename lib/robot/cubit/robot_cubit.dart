@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,43 +13,68 @@ import 'package:sumobot/repositories/robots/models/step.dart' as Step;
 import 'package:sumobot/robot/cubit/robot_state.dart';
 
 class RobotCubit extends Cubit<RobotState> {
-  RobotCubit(Robot robot, this._stepsRepository, this._robotsRepository)
+  RobotCubit(String robot, this.edition, this._robotsRepository)
       : super(RobotState(
-          robot: robot,
-          image: Image.asset(
-            "assets/kit-sumobot.jpg",
-            fit: BoxFit.fitWidth,
-          ),
+          robot: Robot.empty,
+          image: const Icon(FontAwesomeIcons.question),
         )) {
-    _stepsRepository.step(robot).listen((Step.Step step) {
-      emit(state.copyWith(step: step));
-    });
+    _robotsRepository.getRobotByUid(robot).listen((Robot robot) async {
+      emit(state.copyWith(robot: robot));
 
-    _robotsRepository.getImage(robot).then((value) {
-      final File image = File(value);
-      if (image.existsSync())
-        emit(state.copyWith(image: Image.file(image)));
-      else
-        emit(state.copyWith(image: Icon(FontAwesomeIcons.question)));
+      _robotsStepsRepository = FirestoreRobotsStepsRepository(edition);
+      if (_robotsStepsStreamSub != null) await _robotsStepsStreamSub.cancel();
+
+      _robotsStepsStreamSub =
+          _robotsStepsRepository.step(robot).listen((Step.Step step) {
+        emit(state.copyWith(step: step));
+        print("step " + step.toString());
+      });
+
+      _robotsRepository.getImage(robot).then((value) {
+        final File image = File(value);
+        if (image.existsSync())
+          emit(state.copyWith(
+              image:
+                  Image.memory(Uint8List.fromList(image.readAsBytesSync()))));
+        else
+          emit(state.copyWith(image: const Icon(FontAwesomeIcons.question)));
+      });
     });
   }
 
-  final FirestoreRobotsStepsRepository _stepsRepository;
+  FirestoreRobotsStepsRepository _robotsStepsRepository;
+  StreamSubscription _robotsStepsStreamSub;
   final FirestoreRobotsRepository _robotsRepository;
+  final String edition;
 
   final picker = ImagePicker();
 
   void delete(BuildContext context) async {
     await showDialog(
-        context: context,
-        builder: (context) =>
-            AlertDialog(title: Text("Ceci n'est pas encore implémenté")));
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Etes-vous sûr ?"),
+        actions: [
+          OutlineButton(
+              onPressed: () => Navigator.of(context).pop(), child: Text("Non")),
+          FlatButton(
+              onPressed: () {
+                _robotsRepository.deleteRobot(state.robot);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text("Oui"))
+        ],
+      ),
+    );
   }
 
   void changePhoto() async {
-    final PickedFile image = await picker.getImage(source: ImageSource.gallery);
+    final PickedFile image =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     final File robotImage =
         File(await _robotsRepository.setImage(state.robot, image.path));
     emit(state.copyWith(image: Image.file(robotImage)));
+    imageCache.clear();
   }
 }

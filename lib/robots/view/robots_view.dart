@@ -148,7 +148,9 @@ class _RobotList extends StatelessWidget {
         }
         return SliverToBoxAdapter(
           child: Column(
-            children: state.robots.map((Robot robot) => _RobotItem(robot)).toList(),
+            children: state.robots
+                .map((Robot robot) => _RobotItem(state.edition, robot))
+                .toList(),
           ),
         );
       },
@@ -190,15 +192,17 @@ class _RobotImageState extends State<_RobotImage> {
 
 class _RobotItem extends StatelessWidget {
   final Robot robot;
+  final Edition edition;
 
-  const _RobotItem(this.robot, {Key key}) : super(key: key);
+  const _RobotItem(this.edition, this.robot, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
         splashColor: Theme.of(context).buttonColor,
-        onTap: () => Navigator.push(context, RobotPage.route(robot)),
+        onTap: () =>
+            Navigator.push(context, RobotPage.route(edition.uid, robot.uid)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

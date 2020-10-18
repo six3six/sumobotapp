@@ -18,7 +18,7 @@ class RobotState extends Equatable {
   RobotState copyWith({
     Robot robot,
     Widget image,
-    Step step,
+      step,
   }) {
     return RobotState(
       image: image ?? this.image,

@@ -2,6 +2,8 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sumobot/repositories/editions/editions_repository.dart';
+import 'package:sumobot/repositories/editions/firestore_editions_repository.dart';
 import 'package:sumobot/repositories/editions/models/edition.dart';
 import 'package:sumobot/repositories/robots/firestore_robots_repository.dart';
 import 'package:sumobot/repositories/robots/models/robot.dart';
@@ -48,7 +50,10 @@ class RobotsAdd extends StatelessWidget {
               edition: edition,
             );
             RobotsRepository repo = FirestoreRobotsRepository(
-                edition, context.repository<AuthenticationRepository>());
+              edition.uid,
+              context.repository<AuthenticationRepository>(),
+              context.repository<FirestoreEditionsRepository>(),
+            );
             print(repo);
             repo.addNewRobot(robot);
             Navigator.pop(context);
