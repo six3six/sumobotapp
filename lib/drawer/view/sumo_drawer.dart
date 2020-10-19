@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sumobot/account/view/account_page.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
 import 'package:sumobot/editions/views/editions_page.dart';
-import 'package:sumobot/lobby/view/lobby_page.dart';
+import 'package:sumobot/news/view/news_page.dart';
 import 'package:sumobot/map/view/map_page.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
 
@@ -50,7 +50,7 @@ class SumoDrawer extends StatelessWidget {
           _DrawerTile(
             name: "Actualités",
             icon: const Icon(FontAwesomeIcons.newspaper),
-            onTap: () => Navigator.push(context, LobbyPage.route()),
+            onTap: () => Navigator.push(context, NewsPage.route()),
           ),
           _DrawerTile(
             name: "Editions",

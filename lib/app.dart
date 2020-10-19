@@ -1,7 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sumobot/lobby/view/lobby_page.dart';
+import 'package:sumobot/news/view/news_page.dart';
 
 import 'authentication/bloc/authentication_bloc.dart';
 import 'login/login.dart';
@@ -52,7 +52,7 @@ class _AppViewState extends State<AppView> {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigator.pushAndRemoveUntil<void>(
-                  LobbyPage.route(),
+                  NewsPage.route(),
                   (route) => false,
                 );
                 break;
