@@ -27,6 +27,7 @@ dependencies:
   bloc: ^6.1.0
   flutter_bloc: ^6.0.6
 
+  photo_view: ^0.10.2
   qr_flutter: ^3.2.0
   barcode_scan: ^3.0.1
   vibration: ^1.7.1
@@ -70,5 +71,6 @@ flutter:
     - assets/sumo_face_200.png
     - assets/sumo_face_500.png
     - assets/sumobot_blanc.png
+    - assets/plan.png
     - assets/T6iVgiU5VAQME8gXMZEM.png
     - assets/ymTcRxq0ouxefl0dp1YJ.png

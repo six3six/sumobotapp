@@ -1,10 +1,12 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:barcode_scan/platform_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/account/view/account_page.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
 import 'package:sumobot/editions/views/editions_page.dart';
+import 'package:sumobot/map/view/map_page.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
 
 class LobbyPage extends StatelessWidget {
@@ -41,10 +43,15 @@ class LobbyPage extends StatelessWidget {
                   Navigator.of(context).push<void>(EditionsPage.route())),
           const SizedBox(height: 10),
           _Card(
+              text: "Plan",
+              icon: const Icon(Icons.map),
+              onTap: () => Navigator.of(context).push<void>(MapPage.route())),
+          const SizedBox(height: 10),
+          _Card(
               text: "Mon compte",
               icon: const Icon(Icons.account_circle),
-              onTap: () => Navigator.of(context).push<void>(AccountPage.route())),
-          const SizedBox(height: 10),
+              onTap: () =>
+                  Navigator.of(context).push<void>(AccountPage.route())),
           _Card(
               text: "Déconnexion",
               icon: const Icon(Icons.directions_run),
@@ -101,7 +108,6 @@ class _Card extends StatelessWidget {
               leading: icon,
               title: Text(text),
             ),
-            const SizedBox(height: 20)
           ],
         ),
       ),
