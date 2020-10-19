@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sumobot/drawer/view/sumo_drawer.dart';
 import 'package:sumobot/editions/cubit/editions_cubit.dart';
 import 'package:sumobot/repositories/editions/firestore_editions_repository.dart';
 
@@ -21,6 +22,7 @@ class EditionsPage extends StatelessWidget {
         create: (context) =>
             EditionsCubit(context.repository<FirestoreEditionsRepository>()),
         child: Scaffold(
+          drawer: SumoDrawer(),
           appBar: AppBar(
             title: const Text("Editions"),
           ),

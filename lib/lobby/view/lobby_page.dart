@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/account/view/account_page.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
+import 'package:sumobot/drawer/view/sumo_drawer.dart';
 import 'package:sumobot/editions/views/editions_page.dart';
 import 'package:sumobot/map/view/map_page.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
@@ -20,6 +21,7 @@ class LobbyPage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      drawer: SumoDrawer(),
       appBar: AppBar(
         title: const Text("Accueil"),
       ),
@@ -36,52 +38,7 @@ class LobbyPage extends StatelessWidget {
             },
           ),
           const SizedBox(height: 30),
-          _Card(
-              text: "La compétition",
-              icon: const Icon(Icons.thumb_up),
-              onTap: () =>
-                  Navigator.of(context).push<void>(EditionsPage.route())),
-          const SizedBox(height: 10),
-          _Card(
-              text: "Plan",
-              icon: const Icon(Icons.map),
-              onTap: () => Navigator.of(context).push<void>(MapPage.route())),
-          const SizedBox(height: 10),
-          _Card(
-              text: "Mon compte",
-              icon: const Icon(Icons.account_circle),
-              onTap: () =>
-                  Navigator.of(context).push<void>(AccountPage.route())),
-          _Card(
-              text: "Déconnexion",
-              icon: const Icon(Icons.directions_run),
-              onTap: () => context
-                  .bloc<AuthenticationBloc>()
-                  .add(AuthenticationLogoutRequested())),
-          const SizedBox(height: 10),
-          BlocBuilder<AuthenticationBloc, AuthenticationState>(
-            builder: (context, AuthenticationState state) {
-              return state.user.admin
-                  ? _Card(
-                      text: "Scanner",
-                      icon: const Icon(Icons.scanner),
-                      onTap: () async {
-                        var result = await BarcodeScanner.scan();
-                        List<String> data = result.rawContent.split(";");
-                        if (data.length != 3 || data[0] != "SUMOCODE")
-                          return Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text("Ceci n'est pas un code SUMOBOT"),
-                          ));
-                        final route = RobotPage.route(
-                          data[1],
-                          data[2],
-                        );
-                        Navigator.of(context).push(route);
-                      },
-                    )
-                  : const SizedBox();
-            },
-          ),
+
         ],
       ),
     );

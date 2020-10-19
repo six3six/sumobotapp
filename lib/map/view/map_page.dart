@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:sumobot/lobby/view/lobby_page.dart';
 
 class MapPage extends StatelessWidget {
   static Route route() {
@@ -14,7 +15,7 @@ class MapPage extends StatelessWidget {
       floatingActionButton: new FloatingActionButton(
         child: new Icon(Icons.fullscreen_exit),
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.push(context, LobbyPage.route());
         },
       ),
       body: PhotoView(
