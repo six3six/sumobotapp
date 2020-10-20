@@ -8,7 +8,7 @@ class Name extends FormzInput<String, NameValidationError> {
   const Name.dirty([String value = '']) : super.dirty(value);
 
   static final RegExp _nameRegExp = RegExp(
-    r'^[a-zA-ZÀ-ú ]{2,}$',
+    r'^[a-zA-ZÀ-ú -]{2,}$',
   );
 
   @override

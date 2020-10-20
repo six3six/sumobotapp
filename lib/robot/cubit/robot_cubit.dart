@@ -15,9 +15,9 @@ import 'package:sumobot/robot/cubit/robot_state.dart';
 class RobotCubit extends Cubit<RobotState> {
   RobotCubit(String robot, this.edition, this._robotsRepository)
       : super(RobotState(
-          robot: Robot.empty,
-          image: const Icon(FontAwesomeIcons.question),
-        )) {
+    robot: Robot.empty,
+    image: const Icon(FontAwesomeIcons.question),
+  )) {
     _robotsRepository.getRobotByUid(robot).listen((Robot robot) async {
       emit(state.copyWith(robot: robot));
 
@@ -26,16 +26,16 @@ class RobotCubit extends Cubit<RobotState> {
 
       _robotsStepsStreamSub =
           _robotsStepsRepository.step(robot).listen((Step.Step step) {
-        emit(state.copyWith(step: step));
-        print("step " + step.toString());
-      });
+            emit(state.copyWith(step: step));
+            print("step " + step.toString());
+          });
 
       _robotsRepository.getImage(robot).then((value) {
         final File image = File(value);
         if (image.existsSync())
           emit(state.copyWith(
               image:
-                  Image.memory(Uint8List.fromList(image.readAsBytesSync()))));
+              Image.memory(Uint8List.fromList(image.readAsBytesSync()))));
         else
           emit(state.copyWith(image: const Icon(FontAwesomeIcons.question)));
       });
@@ -52,29 +52,35 @@ class RobotCubit extends Cubit<RobotState> {
   void delete(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Etes-vous sûr ?"),
-        actions: [
-          OutlineButton(
-              onPressed: () => Navigator.of(context).pop(), child: Text("Non")),
-          FlatButton(
-              onPressed: () {
-                _robotsRepository.deleteRobot(state.robot);
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-              child: Text("Oui"))
-        ],
-      ),
+      builder: (context) =>
+          AlertDialog(
+            title: const Text("Etes-vous sûr ?"),
+            actions: [
+              OutlineButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text("Non")),
+              FlatButton(
+                  onPressed: () {
+                    _robotsRepository.deleteRobot(state.robot);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Oui"))
+            ],
+          ),
     );
   }
 
   void changePhoto() async {
-    final PickedFile image =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
-    final File robotImage =
-        File(await _robotsRepository.setImage(state.robot, image.path));
-    emit(state.copyWith(image: Image.file(robotImage)));
-    imageCache.clear();
+    try {
+      final PickedFile image =
+      await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+      final File robotImage =
+      File(await _robotsRepository.setImage(state.robot, image.path));
+      emit(state.copyWith(image: Image.file(robotImage)));
+      imageCache.clear();
+    } catch (e) {
+      return;
+    }
   }
 }

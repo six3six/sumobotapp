@@ -71,6 +71,7 @@ flutter:
 
   assets:
     - assets/sumobot.png
+    - assets/fake_avatar.png
     - assets/kit-sumobot.jpg
     - assets/sumo_front.svg
     - assets/sumo_face_200.png

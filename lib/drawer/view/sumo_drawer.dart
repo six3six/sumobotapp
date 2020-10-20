@@ -28,7 +28,7 @@ class SumoDrawer extends StatelessWidget {
                     return Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage: NetworkImage(state.user.photo),
+                          backgroundImage: state.user.photo != null ? NetworkImage(state.user.photo) : AssetImage("assets/fake_avatar.png"),
                           radius: 35,
                         ),
                         SizedBox(
