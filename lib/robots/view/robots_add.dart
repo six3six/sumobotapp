@@ -52,7 +52,7 @@ class RobotsAdd extends StatelessWidget {
             RobotsRepository repo = FirestoreRobotsRepository(
               edition.uid,
               context.repository<AuthenticationRepository>(),
-              context.repository<FirestoreEditionsRepository>(),
+              FirestoreEditionsRepository(),
             );
             print(repo);
             repo.addNewRobot(robot);
