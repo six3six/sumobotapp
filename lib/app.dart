@@ -1,6 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sumobot/news/view/news_page.dart';
 
 import 'authentication/bloc/authentication_bloc.dart';
@@ -51,6 +52,7 @@ class _AppViewState extends State<AppView> {
           listener: (context, state) {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
+                OneSignal.shared.setExternalUserId(state.user.id);
                 _navigator.pushAndRemoveUntil<void>(
                   NewsPage.route(),
                   (route) => false,

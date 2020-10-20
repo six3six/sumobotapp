@@ -13,9 +13,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   OneSignal.shared.init("4f82f3b1-777e-4b3d-a3cb-47f8a5585044", iOSSettings: {
-    OSiOSSettings.autoPrompt: false,
+    OSiOSSettings.autoPrompt: true,
     OSiOSSettings.inAppLaunchUrl: false
   });
+
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SumobotObserver();
   runApp(App(authenticationRepository: AuthenticationRepository()));
