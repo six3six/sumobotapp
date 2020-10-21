@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'models/models.dart';
 
@@ -15,6 +16,8 @@ class LogInWithEmailAndPasswordFailure implements Exception {}
 
 /// Thrown during the sign in with google process if a failure occurs.
 class LogInWithGoogleFailure implements Exception {}
+
+class LogInWithAppleFailure implements Exception {}
 
 /// Thrown during the logout process if a failure occurs.
 class LogOutFailure implements Exception {}
@@ -88,6 +91,39 @@ class AuthenticationRepository {
             userCredential.user.uid, googleUser.displayName, googleUser.email);
     } on Exception {
       throw LogInWithGoogleFailure();
+    }
+  }
+
+  /// Starts the Sign In with Apple Flow.
+  ///
+  /// Throws a [LogInWithEmailAndPasswordFailure] if an exception occurs.
+  Future<void> logInWithApple() async {
+    try {
+      final AuthorizationCredentialAppleID appleCredential =
+          await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final firebase_auth.OAuthCredential credential =
+          firebase_auth.OAuthCredential(
+        providerId: "apple.com",
+        signInMethod: "apple.com",
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      final firebase_auth.UserCredential userCredential =
+      await _firebaseAuth.signInWithCredential(credential);
+      if (!await userExistInDatabase(userCredential.user.uid))
+        addUserInDatabase(
+            userCredential.user.uid, appleCredential.givenName + " " + appleCredential.familyName, appleCredential.email);
+
+
+    } on Exception {
+      throw LogInWithAppleFailure();
     }
   }
 

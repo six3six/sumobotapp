@@ -40,6 +40,7 @@ dependencies:
   equatable: ^1.2.5
   formz: ^0.3.2
 
+
   font_awesome_flutter: ^8.10.0
 
   onesignal_flutter: ^2.6.1

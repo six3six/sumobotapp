@@ -124,6 +124,30 @@ class GoogleLoginButton extends StatelessWidget {
   }
 }
 
+
+class AppleLoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: RaisedButton.icon(
+        key: const Key('loginForm_appleLogin_raisedButton'),
+        label: Text(
+          'SE CONNECTER AVEC APPLE',
+          style: TextStyle(color: Colors.white),
+        ),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        icon: Icon(FontAwesomeIcons.apple, color: Colors.white),
+        color: Colors.black,
+        onPressed: () => context.bloc<LoginCubit>().logInWithApple(),
+      ),
+    );
+  }
+}
+
 class SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
