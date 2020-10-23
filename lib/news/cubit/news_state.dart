@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:sumobot/repositories/news/model/new.dart';
+import 'package:news_repository/model/new.dart';
 
 class NewsState extends Equatable {
   final List<New> news;

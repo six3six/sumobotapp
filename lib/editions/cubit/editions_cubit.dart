@@ -1,6 +1,6 @@
+import 'package:editions_repository/editions_repository.dart';
+import 'package:editions_repository/models/edition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sumobot/repositories/editions/editions_repository.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
 
 import 'editions_state.dart';
 

@@ -1,10 +1,10 @@
+import 'package:editions_repository/models/edition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:sumobot/editions/cubit/editions_cubit.dart';
 import 'package:sumobot/editions/cubit/editions_state.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
 import 'package:sumobot/robots/view/robots_page.dart';
 
 class EditionsView extends StatelessWidget {

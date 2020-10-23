@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sumobot/repositories/robots/models/robot.dart';
-import 'package:sumobot/repositories/robots/models/step.dart';
+import 'package:robots_repository/models/robot.dart';
+import 'package:robots_repository/models/step.dart';
 
 class RobotState extends Equatable {
   const RobotState({

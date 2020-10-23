@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
 import 'package:sumobot/news/cubit/news_cubit.dart';
 import 'package:sumobot/news/cubit/news_state.dart';
-import 'package:sumobot/repositories/news/model/new.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:news_repository/model/new.dart';
 
 class NewsView extends StatelessWidget {
   @override
@@ -31,7 +31,7 @@ class NewsView extends StatelessWidget {
               return Center(child: CircularProgressIndicator());
             if (state.news.length > 0)
               return ListView(
-                  children: state.news.map((New n) => _tile(n)).toList());
+                  children: state.news.map<Widget>((New n) => _tile(n)).toList());
             return Text("Il n'y a pas d'infos pour le moment ;)");
           }),
         ),

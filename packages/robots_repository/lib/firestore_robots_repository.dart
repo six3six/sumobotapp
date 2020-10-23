@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:editions_repository/editions_repository.dart';
+import 'package:editions_repository/models/edition.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sumobot/repositories/editions/editions_repository.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
 
+import 'entities/robot_entity.dart';
 import 'models/robot.dart';
 import 'robots_repository.dart';
-import 'entities/robot_entity.dart';
 
 class FirestoreRobotsRepository extends RobotsRepository {
   CollectionReference robotCollection;
@@ -17,7 +17,8 @@ class FirestoreRobotsRepository extends RobotsRepository {
   final AuthenticationRepository authenticationRepository;
   final EditionsRepository editionsRepository;
 
-  FirestoreRobotsRepository(this.edition, this.authenticationRepository, this.editionsRepository) {
+  FirestoreRobotsRepository(
+      this.edition, this.authenticationRepository, this.editionsRepository) {
     robotCollection = FirebaseFirestore.instance
         .collection("editions")
         .doc(edition)
@@ -75,8 +76,9 @@ class FirestoreRobotsRepository extends RobotsRepository {
   Future<String> getImage(Robot robot) async {
     final String imageName = robot.uid + ".jpg";
 
-    final Reference robotRef = FirebaseStorage.instance
-        .ref("robots")
+    final StorageReference robotRef = FirebaseStorage.instance
+        .ref()
+        .child("robots")
         .child(robot.owner.id)
         .child(imageName);
 
@@ -94,16 +96,18 @@ class FirestoreRobotsRepository extends RobotsRepository {
         ? imageLocal.lastModifiedSync()
         : DateTime.fromMicrosecondsSinceEpoch(0);
 
-    FullMetadata metadata;
+    StorageMetadata metadata;
     try {
       metadata = await robotRef.getMetadata();
     } catch (e) {
       return imageLocal.path;
     }
 
-    if (metadata.updated.isAfter(lastMod)) {
+    if (DateTime.fromMillisecondsSinceEpoch(metadata.updatedTimeMillis)
+        .isAfter(lastMod)) {
       print("download $imageName");
-      final TaskSnapshot snap = await robotRef.writeToFile(imageLocal);
+      final StorageFileDownloadTask snap =
+          await robotRef.writeToFile(imageLocal);
     }
 
     return imageLocal.path;
@@ -125,14 +129,14 @@ class FirestoreRobotsRepository extends RobotsRepository {
 
     if (!imageDir.existsSync()) imageDir.createSync();
 
-    final Reference robotRef = FirebaseStorage.instance
-        .ref("robots")
+    final StorageReference robotRef = FirebaseStorage.instance
+        .ref().child("robots")
         .child(robot.owner.id)
         .child(robot.uid + ".jpg");
 
     final File newImage = File(image);
     if (!newImage.existsSync()) return prevImage.path;
-    await robotRef.putFile(newImage);
+    robotRef.putFile(newImage);
 
     if (prevImage.existsSync()) prevImage.delete();
     newImage.copySync(prevImage.path);

@@ -1,5 +1,5 @@
+import 'package:editions_repository/models/edition.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
 
 class EditionsState extends Equatable {
   const EditionsState({

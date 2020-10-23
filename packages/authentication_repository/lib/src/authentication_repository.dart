@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
-import 'dart:convert';
 
 import 'models/models.dart';
 
@@ -33,7 +31,8 @@ class AuthenticationRepository {
     firebase_auth.FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
     FirebaseFirestore firestore,
-  })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+  })
+      : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
         _firestore = firestore ?? FirebaseFirestore.instance;
 
@@ -63,7 +62,7 @@ class AuthenticationRepository {
     assert(email != null && password != null && name != null);
     try {
       final firebase_auth.UserCredential userCredential =
-          await _firebaseAuth.createUserWithEmailAndPassword(
+      await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -80,14 +79,14 @@ class AuthenticationRepository {
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      await googleUser.authentication;
       final firebase_auth.OAuthCredential credential =
-          firebase_auth.GoogleAuthProvider.credential(
+      firebase_auth.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
       final firebase_auth.UserCredential userCredential =
-          await _firebaseAuth.signInWithCredential(credential);
+      await _firebaseAuth.signInWithCredential(credential);
       if (!await userExistInDatabase(userCredential.user.uid))
         addUserInDatabase(
             userCredential.user.uid, googleUser.displayName, googleUser.email);
@@ -112,7 +111,7 @@ class AuthenticationRepository {
       final appleIdCredential = appleCredential.credential;
 
       final firebase_auth.OAuthCredential credential =
-          firebase_auth.OAuthCredential(
+      firebase_auth.OAuthCredential(
         providerId: "apple.com",
         signInMethod: "apple.com",
         idToken: String.fromCharCodes(appleIdCredential.identityToken),
@@ -120,7 +119,12 @@ class AuthenticationRepository {
       );
 
       final firebase_auth.UserCredential userCredential =
-          await _firebaseAuth.signInWithCredential(credential);
+      await _firebaseAuth.signInWithCredential(credential);
+
+      userCredential.user.updateProfile(
+          displayName: appleIdCredential.fullName.givenName +
+              " " +
+              appleIdCredential.fullName.familyName);
       if (!await userExistInDatabase(userCredential.user.uid))
         addUserInDatabase(
             userCredential.user.uid,
@@ -133,8 +137,8 @@ class AuthenticationRepository {
     }
   }
 
-  Future<void> addUserInDatabase(
-      String userUid, String name, String email) async {
+  Future<void> addUserInDatabase(String userUid, String name,
+      String email) async {
     await _firestore.collection("users").doc(userUid).set({
       "name": name,
       "email": email,
@@ -143,7 +147,7 @@ class AuthenticationRepository {
 
   Future<bool> userExistInDatabase(String userUid) async {
     DocumentSnapshot doc =
-        await _firestore.collection("users").doc(userUid).get();
+    await _firestore.collection("users").doc(userUid).get();
     return doc.exists;
   }
 
@@ -191,7 +195,10 @@ class AuthenticationRepository {
           .collection("roles")
           .doc("admins")
           .get();
-      admins.data().keys.contains(uid);
+      admins
+          .data()
+          .keys
+          .contains(uid);
       admin = true;
     } on StateError {
       admin = false;
@@ -201,7 +208,7 @@ class AuthenticationRepository {
 
   Future<User> getUserFromUid(String uid) async {
     final DocumentSnapshot snapshot =
-        await _firestore.collection("users").doc(uid).get();
+    await _firestore.collection("users").doc(uid).get();
 
     if (!snapshot.exists) return User.empty;
     final data = snapshot.data();
@@ -224,7 +231,10 @@ extension on firebase_auth.User {
           .doc("admins")
           .get();
 
-      admin = admins.data().keys.contains(uid);
+      admin = admins
+          .data()
+          .keys
+          .contains(uid);
     } on StateError {
       admin = false;
     }
@@ -232,13 +242,17 @@ extension on firebase_auth.User {
     String name = "";
     try {
       DocumentSnapshot user =
-          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+      await FirebaseFirestore.instance.collection("users").doc(uid).get();
       name = user.get("name");
     } catch (e) {
       name = displayName;
     }
 
     return User(
-        id: uid, admin: admin, email: email, name: name, photo: photoURL);
+        id: uid,
+        admin: admin,
+        email: email,
+        name: name,
+        photo: photoURL);
   }
 }

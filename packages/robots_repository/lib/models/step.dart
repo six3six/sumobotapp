@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:sumobot/repositories/robots/entities/step_entity.dart';
+import 'package:robots_repository/entities/step_entity.dart';
 
 class Step extends Equatable {
   const Step({

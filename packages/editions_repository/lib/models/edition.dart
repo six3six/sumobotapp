@@ -1,6 +1,6 @@
+import '../entities/edition_entity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sumobot/repositories/editions/entities/edition_entity.dart';
 
 class Edition extends Equatable {
   const Edition({

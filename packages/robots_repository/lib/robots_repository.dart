@@ -1,5 +1,4 @@
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
 
 import 'models/robot.dart';
 

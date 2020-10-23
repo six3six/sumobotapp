@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:robots_repository/entities/step_entity.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
-import 'package:sumobot/repositories/robots/entities/step_entity.dart';
 import 'package:sumobot/robot/cubit/robot_cubit.dart';
 import 'package:sumobot/robot/cubit/robot_state.dart';
 

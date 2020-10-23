@@ -14,13 +14,14 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.centerRight,
                 end: Alignment.centerLeft,
                 colors: [Colors.redAccent[700], Colors.red[700]])),
         child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: double.infinity),
+          constraints: BoxConstraints(minHeight: double.infinity, maxWidth: 1000),
           child: SafeArea(
             child: SingleChildScrollView(
               child: Container(

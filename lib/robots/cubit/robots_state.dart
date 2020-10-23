@@ -1,6 +1,6 @@
+import 'package:editions_repository/models/edition.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
-import 'package:sumobot/repositories/robots/models/robot.dart';
+import 'package:robots_repository/models/robot.dart';
 
 class RobotsState extends Equatable {
   final List<Robot> robots;

@@ -24,11 +24,21 @@ dependencies:
   authentication_repository:
     path: packages/authentication_repository
 
+  editions_repository:
+    path: packages/editions_repository
+
+  news_repository:
+    path: packages/news_repository
+
+  robots_repository:
+    path: packages/robots_repository
+
+
+
   bloc: ^6.1.0
   flutter_bloc: ^6.0.6
 
-  webfeed: ^0.6.0
-  http: ^0.12.2
+
   url_launcher: ^5.7.5
   html_unescape: ^1.0.2
 
@@ -47,8 +57,7 @@ dependencies:
   firebase_core: ^0.5.0+1
   firebase_analytics: ^6.0.2
   firebase_crashlytics: ^0.2.1+1
-  cloud_firestore: ^0.14.1+3
-  firebase_storage: ^5.0.0-dev.3
+
 
   path_provider: ^1.6.21
 

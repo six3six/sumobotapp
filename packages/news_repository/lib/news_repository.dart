@@ -1,5 +1,3 @@
-
-
 import 'model/new.dart';
 
 abstract class NewsRepository {

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:sumobot/news/cubit/news_state.dart';
-import 'package:sumobot/repositories/news/model/new.dart';
-import 'package:sumobot/repositories/news/news_repository.dart';
+import 'package:news_repository/news_repository.dart';
+import 'package:news_repository/model/new.dart';
 
 class NewsCubit extends Cubit<NewsState> {
   NewsCubit(this._newsRepository) : super(NewsState()) {

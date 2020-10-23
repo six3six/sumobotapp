@@ -6,6 +6,7 @@ import 'package:sumobot/news/view/news_page.dart';
 
 import 'authentication/bloc/authentication_bloc.dart';
 import 'login/login.dart';
+import 'main.dart';
 import 'splash/view/splash_page.dart';
 import 'theme.dart';
 
@@ -52,11 +53,13 @@ class _AppViewState extends State<AppView> {
           listener: (context, state) {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
-                OneSignal.shared.setExternalUserId(state.user.id);
-                _navigator.pushAndRemoveUntil<void>(
-                  NewsPage.route(),
-                  (route) => false,
-                );
+                if (oneSignalAvailable) {
+                  OneSignal.shared.setExternalUserId(state.user.id);
+                  _navigator.pushAndRemoveUntil<void>(
+                    NewsPage.route(),
+                    (route) => false,
+                  );
+                }
                 break;
               case AuthenticationStatus.unauthenticated:
                 _navigator.pushAndRemoveUntil<void>(

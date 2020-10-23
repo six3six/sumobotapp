@@ -1,7 +1,8 @@
-import 'package:sumobot/repositories/news/model/new.dart';
-import 'package:sumobot/repositories/news/news_repository.dart';
 import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart' as http;
+
+import 'model/new.dart';
+import 'news_repository.dart';
 
 class RssNewsRepository extends NewsRepository {
   final _targetUrl = "https://sumobot.esieespace.fr/feed/";

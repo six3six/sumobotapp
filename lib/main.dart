@@ -6,16 +6,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sumobot/sumobot_observer.dart';
+import 'dart:io' show Platform;
 
 import 'app.dart';
+
+bool oneSignalAvailable = Platform.isAndroid || Platform.isIOS;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  OneSignal.shared.init("4f82f3b1-777e-4b3d-a3cb-47f8a5585044", iOSSettings: {
-    OSiOSSettings.autoPrompt: true,
-    OSiOSSettings.inAppLaunchUrl: false
-  });
+  if (oneSignalAvailable) {
+    OneSignal.shared.init("4f82f3b1-777e-4b3d-a3cb-47f8a5585044", iOSSettings: {
+      OSiOSSettings.autoPrompt: true,
+      OSiOSSettings.inAppLaunchUrl: false
+    });
+  }
 
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SumobotObserver();

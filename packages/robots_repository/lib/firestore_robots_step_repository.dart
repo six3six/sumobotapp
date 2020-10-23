@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
-import 'package:sumobot/repositories/robots/entities/step_entity.dart';
-import 'package:sumobot/repositories/robots/models/robot.dart';
-import 'package:sumobot/repositories/robots/models/step.dart';
-import 'package:sumobot/repositories/robots/robots_steps_repository.dart';
+import 'package:robots_repository/robots_steps_repository.dart';
+
+import 'entities/step_entity.dart';
+import 'models/robot.dart';
+import 'models/step.dart';
 
 class FirestoreRobotsStepsRepository extends RobotsStepsRepository {
   FirestoreRobotsStepsRepository(this.edition) {

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:editions_repository/models/edition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
-import 'package:sumobot/repositories/robots/models/robot.dart';
-import 'package:sumobot/repositories/robots/robots_repository.dart';
+import 'package:robots_repository/models/robot.dart';
+import 'package:robots_repository/robots_repository.dart';
 
 import 'robots_state.dart';
 

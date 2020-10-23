@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sumobot/repositories/editions/editions_repository.dart';
-import 'package:sumobot/repositories/editions/entities/edition_entity.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
+
+import 'editions_repository.dart';
+import 'entities/edition_entity.dart';
+import 'models/edition.dart';
+
 
 class FirestoreEditionsRepository extends EditionsRepository {
   final editionCollection = FirebaseFirestore.instance.collection('editions');

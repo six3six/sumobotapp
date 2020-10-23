@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:animated_size_and_fade/animated_size_and_fade.dart';
+import 'package:editions_repository/models/edition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
-import 'package:sumobot/repositories/robots/firestore_robots_repository.dart';
-import 'package:sumobot/repositories/robots/models/robot.dart';
+import 'package:robots_repository/firestore_robots_repository.dart';
+import 'package:robots_repository/models/robot.dart';
 import 'package:sumobot/robot/cubit/robot_state.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
 import 'package:sumobot/robots/cubit/robots_cubit.dart';

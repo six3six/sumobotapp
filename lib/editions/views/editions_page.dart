@@ -1,8 +1,8 @@
+import 'package:editions_repository/firestore_editions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sumobot/drawer/view/sumo_drawer.dart';
 import 'package:sumobot/editions/cubit/editions_cubit.dart';
-import 'package:sumobot/repositories/editions/firestore_editions_repository.dart';
 
 import 'editions_view.dart';
 

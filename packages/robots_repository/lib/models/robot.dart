@@ -1,7 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:editions_repository/models/edition.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sumobot/repositories/editions/models/edition.dart';
 import '../entities/robot_entity.dart';
 
 class Robot extends Equatable {
