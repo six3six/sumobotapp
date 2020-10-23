@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'dart:convert';
 
 import 'models/models.dart';
 
@@ -89,9 +91,13 @@ class AuthenticationRepository {
       if (!await userExistInDatabase(userCredential.user.uid))
         addUserInDatabase(
             userCredential.user.uid, googleUser.displayName, googleUser.email);
-    } on Exception {
+    } catch (e) {
       throw LogInWithGoogleFailure();
     }
+  }
+
+  Future<bool> logInWithAppleAvailable() async {
+    return await AppleSignIn.isAvailable();
   }
 
   /// Starts the Sign In with Apple Flow.
@@ -99,29 +105,29 @@ class AuthenticationRepository {
   /// Throws a [LogInWithEmailAndPasswordFailure] if an exception occurs.
   Future<void> logInWithApple() async {
     try {
-      final AuthorizationCredentialAppleID appleCredential =
-          await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
+      final appleCredential = await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+
+      final appleIdCredential = appleCredential.credential;
 
       final firebase_auth.OAuthCredential credential =
           firebase_auth.OAuthCredential(
         providerId: "apple.com",
         signInMethod: "apple.com",
-        idToken: appleCredential.identityToken,
-        accessToken: appleCredential.authorizationCode,
+        idToken: String.fromCharCodes(appleIdCredential.identityToken),
+        accessToken: String.fromCharCodes(appleIdCredential.authorizationCode),
       );
 
       final firebase_auth.UserCredential userCredential =
-      await _firebaseAuth.signInWithCredential(credential);
+          await _firebaseAuth.signInWithCredential(credential);
       if (!await userExistInDatabase(userCredential.user.uid))
         addUserInDatabase(
-            userCredential.user.uid, appleCredential.givenName + " " + appleCredential.familyName, appleCredential.email);
-
-
+            userCredential.user.uid,
+            appleIdCredential.fullName.givenName +
+                " " +
+                appleIdCredential.fullName.familyName,
+            appleIdCredential.email);
     } on Exception {
       throw LogInWithAppleFailure();
     }

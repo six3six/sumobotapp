@@ -52,7 +52,13 @@ class LoginForm extends StatelessWidget {
         const SizedBox(height: 30),
         GoogleLoginButton(),
         const SizedBox(height: 10),
-        AppleLoginButton(),
+        BlocBuilder<LoginCubit, LoginState>(
+          buildWhen: (previous, current) =>
+              previous.showSignInWithApple != current.showSignInWithApple,
+          builder: (context, LoginState state) {
+            return state.showSignInWithApple ? AppleLoginButton() : SizedBox();
+          },
+        ),
         const SizedBox(height: 70),
         BlocBuilder<LoginCubit, LoginState>(
           buildWhen: (previous, current) =>

@@ -10,7 +10,10 @@ part 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit(this._authenticationRepository)
       : assert(_authenticationRepository != null),
-        super(const LoginState());
+        super(const LoginState()) {
+    _authenticationRepository.logInWithAppleAvailable().then((bool available) =>
+        emit(state.copyWith(showSignInWithApple: available)));
+  }
 
   final AuthenticationRepository _authenticationRepository;
 
