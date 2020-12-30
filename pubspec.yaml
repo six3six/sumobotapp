@@ -35,7 +35,7 @@ dependencies:
 
 
 
-  bloc: ^6.1.0
+  bloc: ^6.1.1
   flutter_bloc: ^6.1.1
 
 
@@ -44,19 +44,19 @@ dependencies:
 
   photo_view: ^0.10.3
   qr_flutter: ^3.2.0
-  barcode_scan: ^3.0.1
-  vibration: ^1.7.2
-  image_picker: ^0.6.7+14
+  barcode_scan_fix: ^1.0.2
+  vibration: ^1.7.3
+  image_picker: ^0.6.7+17
   equatable: ^1.2.5
   formz: ^0.3.2
 
 
-  font_awesome_flutter: ^8.10.0
+  font_awesome_flutter: ^8.11.0
 
-  onesignal_flutter: ^2.6.1
-  firebase_core: ^0.5.2
-  firebase_analytics: ^6.2.0
-  firebase_crashlytics: ^0.2.3
+  onesignal_flutter: ^2.6.2
+  firebase_core: ^0.5.3
+  firebase_analytics: ^6.3.0
+  firebase_crashlytics: ^0.2.4
 
 
   path_provider: ^1.6.24

@@ -9,9 +9,9 @@ dependencies:
   flutter:
     sdk: flutter
   equatable: ^1.2.5
-  firebase_core: ^0.5.2
-  meta: ^1.2.3
-  cloud_firestore: ^0.14.3
+  firebase_core: ^0.5.3
+  meta: ^1.2.4
+  cloud_firestore: ^0.14.4
 
 dev_dependencies:
   flutter_test:

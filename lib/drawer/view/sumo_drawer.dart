@@ -1,4 +1,3 @@
-import 'package:barcode_scan/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +7,7 @@ import 'package:sumobot/editions/views/editions_page.dart';
 import 'package:sumobot/news/view/news_page.dart';
 import 'package:sumobot/map/view/map_page.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
+import 'package:barcode_scan_fix/barcode_scan.dart';
 
 class SumoDrawer extends StatelessWidget {
   @override
@@ -28,7 +28,9 @@ class SumoDrawer extends StatelessWidget {
                     return Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage: state.user.photo != null ? NetworkImage(state.user.photo) : AssetImage("assets/fake_avatar.png"),
+                          backgroundImage: state.user.photo != null
+                              ? NetworkImage(state.user.photo)
+                              : AssetImage("assets/fake_avatar.png"),
                           radius: 35,
                         ),
                         SizedBox(
@@ -70,7 +72,7 @@ class SumoDrawer extends StatelessWidget {
                       icon: const Icon(Icons.scanner),
                       onTap: () async {
                         var result = await BarcodeScanner.scan();
-                        List<String> data = result.rawContent.split(";");
+                        List<String> data = result.split(";");
                         if (data.length != 3 || data[0] != "SUMOCODE")
                           return Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text("Ceci n'est pas un code SUMOBOT"),
