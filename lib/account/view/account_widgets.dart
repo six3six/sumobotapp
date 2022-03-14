@@ -14,7 +14,7 @@ class PasswordInput extends StatelessWidget {
         return TextField(
           key: const Key('loginForm_passwordInput_textField'),
           onChanged: (password) =>
-              context.bloc<AccountCubit>().passwordChanged(password),
+              context.read<AccountCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'Mot de passe',
@@ -43,7 +43,7 @@ class ChangePasswordButton extends StatelessWidget {
                   child: const Text('CHANGER DE MOT DE PASSE'),
                   textColor: Colors.white,
                   onPressed: state.status.isValidated
-                      ? () => context.bloc<AccountCubit>().changePassword()
+                      ? () => context.read<AccountCubit>().changePassword()
                       : null,
                 ),
               );

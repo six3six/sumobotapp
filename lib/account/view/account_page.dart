@@ -20,7 +20,7 @@ class AccountPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (_) => AccountCubit(
-          context.repository<AuthenticationRepository>(),
+          context.watch<AuthenticationRepository>(),
         ),
         child: AccountView(),
       ),

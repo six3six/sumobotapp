@@ -76,7 +76,7 @@ class _Dashboard extends StatelessWidget {
 }
 
 class _OwnerTools extends StatelessWidget {
-  const _OwnerTools({Key key}) : super(key: key);
+  const _OwnerTools({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,7 @@ class _OwnerTools extends StatelessWidget {
 }
 
 class _TitleBlock extends StatelessWidget {
-  const _TitleBlock({Key key}) : super(key: key);
+  const _TitleBlock({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +125,7 @@ class _TitleBlock extends StatelessWidget {
 }
 
 class _StepList extends StatelessWidget {
-  const _StepList({Key key}) : super(key: key);
+  const _StepList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +157,11 @@ class _StepTile extends StatelessWidget {
   final StepStatus status;
   final String name;
 
-  const _StepTile({Key key, @required this.status, @required this.name})
-      : super(key: key);
+  const _StepTile({
+    Key? key,
+    required this.status,
+    required this.name,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +178,7 @@ class _StepTile extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .headline5
-                  .merge(TextStyle(color: getColor())),
+                  ?.merge(TextStyle(color: getColor())),
             ),
           ),
         ],
@@ -242,7 +245,7 @@ class _StepTile extends StatelessWidget {
 }
 
 class _QR extends StatelessWidget {
-  const _QR({Key key}) : super(key: key);
+  const _QR({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -252,7 +255,8 @@ class _QR extends StatelessWidget {
         builder: (BuildContext context, RobotState state) {
           return Center(
             child: QrImage(
-              data: "SUMOCODE;" + state.robot.edition.uid + ";" + state.robot.uid,
+              data:
+                  "SUMOCODE;" + state.robot.edition.uid + ";" + state.robot.uid,
               version: QrVersions.auto,
               size: 300.0,
             ),
@@ -262,20 +266,20 @@ class _QR extends StatelessWidget {
 }
 
 class _ChangeImageButton extends StatelessWidget {
-  const _ChangeImageButton({Key key}) : super(key: key);
+  const _ChangeImageButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
       child: const Text("Changer l'image du robot"),
       textColor: Colors.white,
-      onPressed: () => context.bloc<RobotCubit>().changePhoto(),
+      onPressed: () => context.read<RobotCubit>().changePhoto(),
     );
   }
 }
 
 class _DeleteRobotButton extends StatelessWidget {
-  const _DeleteRobotButton({Key key}) : super(key: key);
+  const _DeleteRobotButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -285,7 +289,7 @@ class _DeleteRobotButton extends StatelessWidget {
       child: RaisedButton(
         child: const Text("Supprimer le robot"),
         textColor: Colors.white,
-        onPressed: () => context.bloc<RobotCubit>().delete(context),
+        onPressed: () => context.read<RobotCubit>().delete(context),
       ),
     );
   }

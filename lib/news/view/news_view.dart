@@ -4,7 +4,7 @@ import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
 import 'package:sumobot/news/cubit/news_cubit.dart';
 import 'package:sumobot/news/cubit/news_state.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:news_repository/model/new.dart';
+import 'package:news_repository/model/article.dart';
 
 class NewsView extends StatelessWidget {
   @override
@@ -26,24 +26,27 @@ class NewsView extends StatelessWidget {
         const SizedBox(height: 30),
         Expanded(
           child: BlocBuilder<NewsCubit, NewsState>(
-              builder: (context, NewsState state) {
-            if (state.isLoading)
-              return Center(child: CircularProgressIndicator());
-            if (state.news.length > 0)
-              return ListView(
-                  children: state.news.map<Widget>((New n) => _tile(n)).toList());
-            return Text("Il n'y a pas d'infos pour le moment ;)");
-          }),
+            builder: (context, state) {
+              if (state.isLoading)
+                return Center(child: CircularProgressIndicator());
+              if (state.news.length > 0)
+                return ListView(
+                  children:
+                      state.news.map<Widget>((Article n) => _Tile(n)).toList(),
+                );
+              return Text("Il n'y a pas d'infos pour le moment ;)");
+            },
+          ),
         ),
       ]),
     );
   }
 }
 
-class _tile extends StatelessWidget {
-  final New _new;
+class _Tile extends StatelessWidget {
+  final Article _article;
 
-  const _tile(this._new, {Key key}) : super(key: key);
+  const _Tile(this._article, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +55,15 @@ class _tile extends StatelessWidget {
         height: 100,
         child: Center(
           child: ListTile(
-            title: Text(_new.title),
+            title: Text(_article.title),
             subtitle: Text(
-              _new.summary ?? "",
+              _article.summary,
               overflow: TextOverflow.ellipsis,
               maxLines: 3,
             ),
-            leading: SizedBox(width: 70, child: Image.network(_new.media)),
+            leading: SizedBox(width: 70, child: Image.network(_article.media)),
             onTap: () {
-              launch(_new.url);
+              launch(_article.url);
             },
           ),
         ),

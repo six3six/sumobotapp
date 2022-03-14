@@ -7,7 +7,7 @@ import 'package:sumobot/login/cubit/login_cubit.dart';
 import 'login_widgets.dart';
 
 class LoginForm extends StatelessWidget {
-  LoginForm({Key key}) : super();
+  LoginForm({Key? key}) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,9 @@ class LoginForm extends StatelessWidget {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Authentication Failure')),
+              SnackBar(
+                  content:
+                      Text('Erreur d\'authentification' + state.errorMessage)),
             );
         }
       },

@@ -12,13 +12,16 @@ import 'models/robot.dart';
 import 'robots_repository.dart';
 
 class FirestoreRobotsRepository extends RobotsRepository {
-  CollectionReference robotCollection;
+  late CollectionReference robotCollection;
   final String edition;
   final AuthenticationRepository authenticationRepository;
   final EditionsRepository editionsRepository;
 
   FirestoreRobotsRepository(
-      this.edition, this.authenticationRepository, this.editionsRepository) {
+    this.edition,
+    this.authenticationRepository,
+    this.editionsRepository,
+  ) {
     robotCollection = FirebaseFirestore.instance
         .collection("editions")
         .doc(edition)
@@ -38,7 +41,7 @@ class FirestoreRobotsRepository extends RobotsRepository {
   }
 
   @override
-  Stream<List<Robot>> robots({String search = "", User user}) {
+  Stream<List<Robot>> robots({String search = "", User? user}) {
     Query query = robotCollection.orderBy("name");
     if (user != null) query = query.where("owner", isEqualTo: user.id);
     query = query.where("name", isGreaterThanOrEqualTo: search);
@@ -49,17 +52,14 @@ class FirestoreRobotsRepository extends RobotsRepository {
   Stream<List<Robot>> _getRobotsFromQuery(Query query) async* {
     Edition edition = await editionsRepository.edition(this.edition).first;
     await for (QuerySnapshot querySnapshot in query.snapshots()) {
-      List<Robot> robots = List<Robot>(querySnapshot.docs.length);
+      List<Robot> robots = List<Robot>.empty();
 
-      int i = 0;
       for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        robots[i] = await Robot.fromEntity(
+        robots.add(await Robot.fromEntity(
           RobotEntity.fromSnapshot(documentSnapshot),
           edition,
           authenticationRepository,
-        );
-
-        i++;
+        ));
       }
 
       yield robots;
@@ -103,7 +103,7 @@ class FirestoreRobotsRepository extends RobotsRepository {
       return imageLocal.path;
     }
 
-    if (metadata.updated.isAfter(lastMod)) {
+    if (metadata.updated?.isAfter(lastMod) ?? true) {
       print("download $imageName");
       await robotRef.writeToFile(imageLocal);
     }

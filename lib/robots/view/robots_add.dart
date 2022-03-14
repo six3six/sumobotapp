@@ -10,12 +10,10 @@ import 'package:robots_repository/robots_repository.dart';
 
 class RobotsAdd extends StatelessWidget {
   RobotsAdd({
-    Key key,
-    @required this.user,
-    @required this.edition,
-  })  : assert(edition != null),
-        assert(user != null),
-        super(key: key);
+    Key? key,
+    required this.user,
+    required this.edition,
+  }) : super(key: key);
 
   final User user;
   final Edition edition;
@@ -50,7 +48,7 @@ class RobotsAdd extends StatelessWidget {
             );
             RobotsRepository repo = FirestoreRobotsRepository(
               edition.uid,
-              context.repository<AuthenticationRepository>(),
+              context.read<AuthenticationRepository>(),
               FirestoreEditionsRepository(),
             );
             print(repo);

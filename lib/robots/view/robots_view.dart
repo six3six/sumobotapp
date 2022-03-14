@@ -8,18 +8,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:robots_repository/firestore_robots_repository.dart';
 import 'package:robots_repository/models/robot.dart';
-import 'package:sumobot/robot/cubit/robot_state.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
 import 'package:sumobot/robots/cubit/robots_cubit.dart';
 import 'package:sumobot/robots/cubit/robots_state.dart';
 import 'package:sumobot/theme.dart';
 
 class RobotsView extends StatelessWidget {
-  const RobotsView({Key key}) : super(key: key);
+  const RobotsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    context.bloc<RobotsCubit>().update();
+    context.watch<RobotsCubit>().update();
 
     return CustomScrollView(
       slivers: [
@@ -31,7 +30,7 @@ class RobotsView extends StatelessWidget {
 }
 
 class _AppBar extends StatelessWidget {
-  const _AppBar({Key key}) : super(key: key);
+  const _AppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class _AppBar extends StatelessWidget {
             Icons.search,
             color: sumoRed,
           ),
-          onPressed: () => context.bloc<RobotsCubit>().setSearchModeToggle(),
+          onPressed: () => context.read<RobotsCubit>().setSearchModeToggle(),
           constraints: const BoxConstraints.tightFor(
             width: 56,
             height: 56,
@@ -80,9 +79,11 @@ class _AppBar extends StatelessWidget {
 }
 
 class _SearchBar extends StatefulWidget {
-  const _SearchBar(
-      {Key key, @required this.isSearching, @required this.edition})
-      : super(key: key);
+  const _SearchBar({
+    Key? key,
+    required this.isSearching,
+    required this.edition,
+  }) : super(key: key);
 
   final bool isSearching;
   final Edition edition;
@@ -95,12 +96,11 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return AnimatedSizeAndFade(
-      vsync: this,
       child: widget.isSearching
           ? CupertinoTextField(
               keyboardType: TextInputType.text,
               placeholder: "Search..",
-              onChanged: (text) => context.bloc<RobotsCubit>().search(text),
+              onChanged: (text) => context.read<RobotsCubit>().search(text),
               placeholderStyle: const TextStyle(
                 color: const Color(0xffC4C6CC),
                 fontSize: 14.0,
@@ -119,7 +119,7 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
                   Icons.cancel,
                   color: sumoRed,
                 ),
-                onPressed: () => context.bloc<RobotsCubit>().setNormalMode(),
+                onPressed: () => context.read<RobotsCubit>().setNormalMode(),
                 constraints: const BoxConstraints.tightFor(
                   width: 56,
                   height: 56,
@@ -135,7 +135,7 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
               children: [
                 Text(
                   "${widget.edition.name}",
-                  style: Theme.of(context).textTheme.headline5.merge(TextStyle(
+                  style: Theme.of(context).textTheme.headline5?.merge(TextStyle(
                         foreground: Paint()
                           ..style = PaintingStyle.stroke
                           ..strokeWidth = 2
@@ -147,7 +147,7 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
                   style: Theme.of(context)
                       .textTheme
                       .headline5
-                      .merge(TextStyle(color: sumoRed)),
+                      ?.merge(TextStyle(color: sumoRed)),
                 ),
               ],
             ),
@@ -156,7 +156,7 @@ class _SearchBarState extends State<_SearchBar> with TickerProviderStateMixin {
 }
 
 class _RobotList extends StatelessWidget {
-  const _RobotList({Key key}) : super(key: key);
+  const _RobotList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +191,10 @@ class _RobotList extends StatelessWidget {
 class _RobotImage extends StatefulWidget {
   final Robot robot;
 
-  _RobotImage({Key key, @required this.robot}) : super(key: key);
+  _RobotImage({
+    Key? key,
+    required this.robot,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _RobotImageState();
@@ -204,7 +207,7 @@ class _RobotImageState extends State<_RobotImage> {
   @override
   Widget build(BuildContext context) {
     if (!isCharged) {
-      final robotRepo = context.repository<FirestoreRobotsRepository>();
+      final robotRepo = context.watch<FirestoreRobotsRepository>();
       robotRepo.getImage(widget.robot).then((value) {
         setState(() {
           isCharged = true;
@@ -224,7 +227,7 @@ class _RobotItem extends StatelessWidget {
   final Robot robot;
   final Edition edition;
 
-  const _RobotItem(this.edition, this.robot, {Key key}) : super(key: key);
+  const _RobotItem(this.edition, this.robot, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

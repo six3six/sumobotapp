@@ -4,15 +4,14 @@ import 'package:flutter/foundation.dart';
 
 class Edition extends Equatable {
   const Edition({
-    @required this.uid,
-    @required this.name,
-    @required this.date,
-  })  : assert(uid != null),
-        assert(name != null);
+    required this.uid,
+    required this.name,
+    this.date,
+  });
 
   final String uid;
   final String name;
-  final DateTime date;
+  final DateTime? date;
 
   static const empty = Edition(uid: '', name: '', date: null);
 
@@ -29,5 +28,5 @@ class Edition extends Equatable {
   }
 
   @override
-  List<Object> get props => [this.uid, this.name, this.date];
+  List<Object?> get props => [uid, name, date];
 }

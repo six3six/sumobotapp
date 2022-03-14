@@ -11,16 +11,14 @@ class EditionsPage extends StatelessWidget {
     return MaterialPageRoute<void>(builder: (_) => EditionsPage());
   }
 
-  const EditionsPage({Key key}) : super(key: key);
+  const EditionsPage({Key? key}) : super(key: key);
 
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return RepositoryProvider(
       create: (context) => FirestoreEditionsRepository(),
       child: BlocProvider(
         create: (context) =>
-            EditionsCubit(context.repository<FirestoreEditionsRepository>()),
+            EditionsCubit(context.watch<FirestoreEditionsRepository>()),
         child: Scaffold(
           drawer: SumoDrawer(),
           appBar: AppBar(

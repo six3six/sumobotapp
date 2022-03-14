@@ -6,19 +6,18 @@ import 'package:robots_repository/models/step.dart';
 class RobotState extends Equatable {
   const RobotState({
     this.robot = Robot.empty,
-    @required this.image,
+    required this.image,
     this.step = Step.empty,
-  })  : assert(robot != null),
-        assert(image != null);
+  });
 
   final Robot robot;
   final Widget image;
   final Step step;
 
   RobotState copyWith({
-    Robot robot,
-    Widget image,
-      step,
+    Robot? robot,
+    Widget? image,
+    step,
   }) {
     return RobotState(
       image: image ?? this.image,

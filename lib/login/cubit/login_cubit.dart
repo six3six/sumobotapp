@@ -8,9 +8,7 @@ import 'package:sumobot/authentication/models/name.dart';
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this._authenticationRepository)
-      : assert(_authenticationRepository != null),
-        super(const LoginState()) {
+  LoginCubit(this._authenticationRepository) : super(const LoginState()) {
     _authenticationRepository.logInWithAppleAvailable().then((bool available) =>
         emit(state.copyWith(showSignInWithApple: available)));
   }
@@ -63,8 +61,11 @@ class LoginCubit extends Cubit<LoginState> {
         password: state.password.value,
       );
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    } on Exception {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+    } on Exception catch (e) {
+      emit(state.copyWith(
+        status: FormzStatus.submissionFailure,
+        errorMessage: e.toString(),
+      ));
     }
   }
 
@@ -73,8 +74,11 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       await _authenticationRepository.logInWithGoogle();
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    } on Exception {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+    } on Exception catch (e) {
+      emit(state.copyWith(
+        status: FormzStatus.submissionFailure,
+        errorMessage: e.toString(),
+      ));
     } on NoSuchMethodError {
       emit(state.copyWith(status: FormzStatus.pure));
     }
@@ -85,8 +89,11 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       await _authenticationRepository.logInWithApple();
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    } on Exception {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+    } on Exception catch (e) {
+      emit(state.copyWith(
+        status: FormzStatus.submissionFailure,
+        errorMessage: e.toString(),
+      ));
     } on NoSuchMethodError {
       emit(state.copyWith(status: FormzStatus.pure));
     }

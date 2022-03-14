@@ -24,26 +24,26 @@ class RobotsState extends Equatable {
   }
 
   RobotsState addRobot(Robot edition) {
-    List<Robot> tmpEditions = List<Robot>();
+    List<Robot> tmpEditions = const [];
     tmpEditions.addAll(robots);
     tmpEditions.add(edition);
     return copyWith(robots: tmpEditions);
   }
 
   RobotsState addRobots(List<Robot> editions) {
-    List<Robot> tmpEditions = List<Robot>();
+    List<Robot> tmpEditions = const [];
     tmpEditions.addAll(this.robots);
     tmpEditions.addAll(editions);
     return copyWith(robots: tmpEditions);
   }
 
   RobotsState copyWith({
-    bool isSearching,
-    List<Robot> robots,
-    Edition edition,
-    String search,
-    bool isPersonal,
-    bool isLoading,
+    bool? isSearching,
+    List<Robot>? robots,
+    Edition? edition,
+    String? search,
+    bool? isPersonal,
+    bool? isLoading,
   }) {
     return RobotsState(
       isSearching: isSearching ?? this.isSearching,
@@ -56,5 +56,6 @@ class RobotsState extends Equatable {
   }
 
   @override
-  List<Object> get props => [robots, isSearching, search, isPersonal, isLoading];
+  List<Object> get props =>
+      [robots, isSearching, search, isPersonal, isLoading];
 }

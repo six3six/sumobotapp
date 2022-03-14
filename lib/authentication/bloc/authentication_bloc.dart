@@ -3,53 +3,49 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
-import 'package:pedantic/pedantic.dart';
+import 'package:flutter/foundation.dart';
 
 part 'authentication_event.dart';
-
 part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
-    @required AuthenticationRepository authenticationRepository,
-  })  : assert(authenticationRepository != null),
-        _authenticationRepository = authenticationRepository,
-        super(const AuthenticationState.unknown()) {
+    required AuthenticationRepository authenticationRepository,
+  })  : _authenticationRepository = authenticationRepository,
+        super(
+          authenticationRepository.currentUser.isNotEmpty
+              ? AuthenticationState.authenticated(
+                  authenticationRepository.currentUser)
+              : const AuthenticationState.unauthenticated(),
+        ) {
+    on<AuthenticationUserChanged>(_onUserChanged);
+    on<AuthenticationLogoutRequested>(_onLogoutRequested);
     _userSubscription = _authenticationRepository.user.listen(
-      (user) async {
-        add(AuthenticationUserChanged(user));
-      },
+      (user) => add(AuthenticationUserChanged(user)),
     );
   }
 
   final AuthenticationRepository _authenticationRepository;
-  StreamSubscription<User> _userSubscription;
+  late final StreamSubscription<User> _userSubscription;
 
-  @override
-  Stream<AuthenticationState> mapEventToState(
-    AuthenticationEvent event,
-  ) async* {
-    if (event is AuthenticationUserChanged) {
-      yield _mapAuthenticationUserChangedToState(event);
-    } else if (event is AuthenticationLogoutRequested) {
-      unawaited(_authenticationRepository.logOut());
-    }
+  void _onUserChanged(
+      AuthenticationUserChanged event, Emitter<AuthenticationState> emit) {
+    emit(
+      event.user.isNotEmpty
+          ? AuthenticationState.authenticated(event.user)
+          : const AuthenticationState.unauthenticated(),
+    );
+  }
+
+  void _onLogoutRequested(
+      AuthenticationLogoutRequested event, Emitter<AuthenticationState> emit) {
+    unawaited(_authenticationRepository.logOut());
   }
 
   @override
   Future<void> close() {
-    _userSubscription?.cancel();
+    _userSubscription.cancel();
     return super.close();
   }
-
-  AuthenticationState _mapAuthenticationUserChangedToState(
-    AuthenticationUserChanged event,
-  ) {
-    return event.user != User.empty
-        ? AuthenticationState.authenticated(event.user)
-        : const AuthenticationState.unauthenticated();
-  }
-
 }

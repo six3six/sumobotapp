@@ -6,15 +6,15 @@ class EditionEntity extends Equatable {
 
   final String id;
   final String name;
-  final DateTime date;
+  final DateTime? date;
 
   @override
-  List<Object> get props => [id, name, date];
+  List<Object?> get props => [id, name, date];
 
-  Map<String, Object> toJson() => {
+  Map<String, Object?> toJson() => {
         "id": id,
         "name": name,
-        "status": date,
+        "date": date,
       };
 
   @override
@@ -23,7 +23,7 @@ class EditionEntity extends Equatable {
   static EditionEntity fromJson(Map<String, Object> json) => EditionEntity(
         json["id"] as String,
         json["name"] as String,
-        DateTime.parse(json["date"]),
+        DateTime.parse(json["date"] as String),
       );
 
   static EditionEntity fromSnapshot(DocumentSnapshot snapshot) => EditionEntity(
@@ -32,7 +32,7 @@ class EditionEntity extends Equatable {
         (snapshot.get("date") as Timestamp).toDate(),
       );
 
-  Map<String, Object> toDocument() => {
+  Map<String, Object?> toDocument() => {
         "name": name,
         "date": date,
       };

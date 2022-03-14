@@ -11,12 +11,10 @@ import 'robot_view.dart';
 
 class RobotPage extends StatelessWidget {
   const RobotPage({
-    Key key,
-    @required this.edition,
-    @required this.robot,
-  })  : assert(robot != null),
-        assert(edition != null),
-        super(key: key);
+    Key? key,
+    required this.edition,
+    required this.robot,
+  }) : super(key: key);
 
   static Route route(String edition, String robot) {
     return MaterialPageRoute<void>(
@@ -37,8 +35,8 @@ class RobotPage extends StatelessWidget {
       child: RepositoryProvider(
         create: (context) => FirestoreRobotsRepository(
           edition,
-          context.repository<AuthenticationRepository>(),
-          context.repository<FirestoreEditionsRepository>(),
+          context.read<AuthenticationRepository>(),
+          context.read<FirestoreEditionsRepository>(),
         ),
         child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (BuildContext context, AuthenticationState state) {
@@ -46,7 +44,7 @@ class RobotPage extends StatelessWidget {
               create: (context) => RobotCubit(
                 robot,
                 edition,
-                context.repository<FirestoreRobotsRepository>(),
+                context.read<FirestoreRobotsRepository>(),
               ),
               child: Scaffold(
                 body: RobotView(),

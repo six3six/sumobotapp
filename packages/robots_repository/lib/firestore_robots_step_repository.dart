@@ -13,7 +13,7 @@ class FirestoreRobotsStepsRepository extends RobotsStepsRepository {
         .collection('robots');
   }
 
-  CollectionReference robotCollection;
+  late CollectionReference robotCollection;
   String edition;
 
   @override

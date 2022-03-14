@@ -12,7 +12,7 @@ class EditionsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditionsCubit, EditionsState>(
         builder: (BuildContext context, EditionsState state) {
-      if (state.editions.length == 0) context.bloc<EditionsCubit>().update();
+      if (state.editions.length == 0) context.read<EditionsCubit>().update();
       return ListView.builder(
         itemCount: state.editions.length,
         itemBuilder: (BuildContext context, int index) {
@@ -28,9 +28,7 @@ final DateFormat _editionFormat = DateFormat('dd MMMM yyyy');
 class _EditionCard extends StatelessWidget {
   final Edition edition;
 
-  const _EditionCard({Key key, @required this.edition})
-      : assert(edition != null),
-        super(key: key);
+  const _EditionCard({Key? key, required this.edition}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +41,8 @@ class _EditionCard extends StatelessWidget {
           children: <Widget>[
             ListTile(
               title: new Text(edition.name),
-              subtitle: Text(_editionFormat.format(edition.date)),
+              subtitle: Text(_editionFormat.format(
+                  edition.date ?? DateTime.fromMicrosecondsSinceEpoch(0))),
               leading: Image.asset(
                 'assets/' + edition.uid + ".png",
                 fit: BoxFit.fitWidth,

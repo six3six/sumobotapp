@@ -10,13 +10,12 @@ import 'robots_state.dart';
 
 class RobotsCubit extends Cubit<RobotsState> {
   RobotsCubit(this._robotsRepository, Edition _edition, this._user)
-      : assert(_robotsRepository != null),
-        super(RobotsState(edition: _edition, isLoading: true));
+      : super(RobotsState(edition: _edition, isLoading: true));
 
   final RobotsRepository _robotsRepository;
   final User _user;
 
-  StreamSubscription _subscription;
+  StreamSubscription? _subscription;
 
   void setSearchMode() {
     emit(state.copyWith(isSearching: true));
@@ -47,7 +46,7 @@ class RobotsCubit extends Cubit<RobotsState> {
 
     _subscription?.cancel();
     _subscription = _robotsRepository
-        .robots(user: state.isPersonal ? _user : null)
+        .robots(user: state.isPersonal ? _user : User.empty)
         .listen((List<Robot> robots) {
       emit(state.copyWith(robots: robots, isLoading: false));
     });
@@ -58,7 +57,7 @@ class RobotsCubit extends Cubit<RobotsState> {
 
     _subscription?.cancel();
     _subscription = _robotsRepository
-        .robots(search: search, user: state.isPersonal ? _user : null)
+        .robots(search: search, user: state.isPersonal ? _user : User.empty)
         .listen((List<Robot> robots) {
       emit(state.copyWith(search: search, robots: robots, isLoading: false));
     });

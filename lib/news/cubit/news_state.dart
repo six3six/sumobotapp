@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
-import 'package:news_repository/model/new.dart';
+import 'package:news_repository/model/article.dart';
 
 class NewsState extends Equatable {
-  final List<New> news;
+  final List<Article> news;
   final bool isLoading;
 
-  NewsState({this.news = const <New>[], this.isLoading = false});
+  NewsState({this.news = const <Article>[], this.isLoading = false});
 
   NewsState copyWith({
-    List<New> news,
-    bool isLoading,
+    List<Article>? news,
+    bool? isLoading,
   }) {
     return NewsState(
       news: news ?? this.news,

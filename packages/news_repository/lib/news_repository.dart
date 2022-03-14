@@ -1,5 +1,5 @@
-import 'model/new.dart';
+import 'model/article.dart';
 
 abstract class NewsRepository {
-  Stream<List<New>> getNews();
+  Stream<List<Article>> getNews();
 }

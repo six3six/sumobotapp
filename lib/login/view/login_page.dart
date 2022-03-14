@@ -16,12 +16,18 @@ class LoginPage extends StatelessWidget {
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.centerRight,
-                end: Alignment.centerLeft,
-                colors: [Colors.redAccent[700], Colors.red[700]])),
+          gradient: LinearGradient(
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            colors: [
+              Colors.redAccent[700] ?? Colors.redAccent,
+              Colors.red[700] ?? Colors.red
+            ],
+          ),
+        ),
         child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: double.infinity, maxWidth: 1000),
+          constraints:
+              BoxConstraints(minHeight: double.infinity, maxWidth: 1000),
           child: SafeArea(
             child: SingleChildScrollView(
               child: Container(
@@ -35,7 +41,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (_) => LoginCubit(
-                        context.repository<AuthenticationRepository>(),
+                        context.watch<AuthenticationRepository>(),
                       ),
                       child: LoginForm(),
                     ),

@@ -28,8 +28,8 @@ class RobotEntity extends Equatable {
 
   static RobotEntity fromSnapshot(DocumentSnapshot snapshot) => RobotEntity(
         snapshot.id,
-        snapshot.data()["name"] as String ?? "",
-        snapshot.data()["owner"] as String ?? "",
+        snapshot.get("name") as String? ?? "",
+        snapshot.get("owner") as String? ?? "",
       );
 
   Map<String, Object> toDocument() => {

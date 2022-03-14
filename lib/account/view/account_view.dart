@@ -29,7 +29,7 @@ class AccountView extends StatelessWidget {
             return Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(state.user.photo),
+                  backgroundImage: NetworkImage(state.user.photo ?? ""),
                   radius: 40,
                 ),
                 SizedBox(

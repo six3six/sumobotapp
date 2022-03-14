@@ -16,7 +16,7 @@ class NameInput extends StatelessWidget {
         return TextField(
           key: const Key('loginForm_nameInput_textField'),
           style: fieldTheme,
-          onChanged: (name) => context.bloc<LoginCubit>().nameChanged(name),
+          onChanged: (name) => context.read<LoginCubit>().nameChanged(name),
           keyboardType: TextInputType.text,
           autocorrect: false,
           decoration: InputDecoration(
@@ -39,7 +39,7 @@ class EmailInput extends StatelessWidget {
         return TextField(
           key: const Key('loginForm_emailInput_textField'),
           style: fieldTheme,
-          onChanged: (email) => context.bloc<LoginCubit>().emailChanged(email),
+          onChanged: (email) => context.read<LoginCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
           decoration: InputDecoration(
@@ -63,7 +63,7 @@ class PasswordInput extends StatelessWidget {
           key: const Key('loginForm_passwordInput_textField'),
           style: fieldTheme,
           onChanged: (password) =>
-              context.bloc<LoginCubit>().passwordChanged(password),
+              context.read<LoginCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'Password',
@@ -92,7 +92,7 @@ class LoginButton extends StatelessWidget {
                   textColor: Colors.white,
                   child: const Text('SE CONNECTER'),
                   onPressed: state.status.isValidated
-                      ? () => context.bloc<LoginCubit>().logInWithCredentials()
+                      ? () => context.read<LoginCubit>().logInWithCredentials()
                       : null,
                 ),
               );
@@ -118,12 +118,11 @@ class GoogleLoginButton extends StatelessWidget {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         icon: Icon(FontAwesomeIcons.google, color: theme.accentColor),
         color: Colors.white,
-        onPressed: () => context.bloc<LoginCubit>().logInWithGoogle(),
+        onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
       ),
     );
   }
 }
-
 
 class AppleLoginButton extends StatelessWidget {
   @override
@@ -139,10 +138,10 @@ class AppleLoginButton extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         shape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         icon: Icon(FontAwesomeIcons.apple, color: Colors.white),
         color: Colors.black,
-        onPressed: () => context.bloc<LoginCubit>().logInWithApple(),
+        onPressed: () => context.read<LoginCubit>().logInWithApple(),
       ),
     );
   }
@@ -165,7 +164,7 @@ class SignUpButton extends StatelessWidget {
                   textColor: Colors.white,
                   child: const Text('CREER UN COMPTE'),
                   onPressed: state.status.isValidated
-                      ? () => context.bloc<LoginCubit>().signUpFormSubmitted()
+                      ? () => context.read<LoginCubit>().signUpFormSubmitted()
                       : null,
                 ),
               );
@@ -177,7 +176,7 @@ class SignUpButton extends StatelessWidget {
 class SignUpInButton extends StatelessWidget {
   final signin;
 
-  const SignUpInButton({Key key, @required this.signin}) : super(key: key);
+  const SignUpInButton({Key? key, @required this.signin}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +187,7 @@ class SignUpInButton extends StatelessWidget {
         signin ? 'CREER UN COMPTE' : 'SE CONNECTER',
         style: TextStyle(color: Colors.white),
       ),
-      onPressed: () => context.bloc<LoginCubit>().changeRequest(),
+      onPressed: () => context.read<LoginCubit>().changeRequest(),
     );
   }
 }

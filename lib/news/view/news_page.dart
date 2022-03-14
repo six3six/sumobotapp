@@ -10,21 +10,20 @@ class NewsPage extends StatelessWidget {
     return MaterialPageRoute<void>(builder: (_) => NewsPage());
   }
 
-  const NewsPage({Key key}) : super(key: key);
+  const NewsPage({Key? key}) : super(key: key);
 
   Widget build(BuildContext context) {
     return RepositoryProvider(
       create: (_) => RssNewsRepository(),
       child: BlocProvider(
         create: (BuildContext context) =>
-            NewsCubit(context.repository<RssNewsRepository>()),
+            NewsCubit(context.read<RssNewsRepository>()),
         child: Scaffold(
           drawer: SumoDrawer(),
           appBar: AppBar(
             title: const Text("News"),
           ),
           body: NewsView(),
-
         ),
       ),
     );

@@ -4,23 +4,23 @@ import 'package:equatable/equatable.dart';
 class EditionsState extends Equatable {
   const EditionsState({
     this.editions = const <Edition>[],
-  }) : assert(editions != null);
+  });
 
   final List<Edition> editions;
 
-  EditionsState resetEditions(){
+  EditionsState resetEditions() {
     return const EditionsState(editions: const <Edition>[]);
   }
 
-  EditionsState addEdition(Edition edition){
-    List<Edition> tmpEditions = List<Edition>();
+  EditionsState addEdition(Edition edition) {
+    List<Edition> tmpEditions = const [];
     tmpEditions.addAll(editions);
     tmpEditions.add(edition);
     return EditionsState(editions: tmpEditions);
   }
 
-  EditionsState addEditions(List<Edition> editions){
-    List<Edition> tmpEditions = List<Edition>();
+  EditionsState addEditions(List<Edition> editions) {
+    List<Edition> tmpEditions = const [];
     tmpEditions.addAll(this.editions);
     tmpEditions.addAll(editions);
     return EditionsState(editions: tmpEditions);

@@ -6,9 +6,7 @@ class Step extends Equatable {
     this.isPayed = StepStatus.UNKNOWN,
     this.isValidated = StepStatus.UNKNOWN,
     this.isRegistered = StepStatus.UNKNOWN,
-  })  : assert(isPayed != null),
-        assert(isValidated != null),
-        assert(isRegistered != null);
+  });
 
   final StepStatus isPayed;
   final StepStatus isValidated;
@@ -23,21 +21,18 @@ class Step extends Equatable {
     switch (stepEntity.name) {
       case "pay":
         return copyWith(isPayed: stepEntity.status);
-        break;
       case "valid":
         return copyWith(isPayed: stepEntity.status);
-        break;
       case "register":
         return copyWith(isRegistered: stepEntity.status);
-        break;
     }
     return this;
   }
 
   Step copyWith({
-    StepStatus isPayed,
-    StepStatus isValidated,
-    StepStatus isRegistered,
+    StepStatus? isPayed,
+    StepStatus? isValidated,
+    StepStatus? isRegistered,
   }) {
     return Step(
       isPayed: isPayed ?? this.isPayed,

@@ -16,13 +16,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   if (oneSignalAvailable) {
-    OneSignal.shared.init("4f82f3b1-777e-4b3d-a3cb-47f8a5585044", iOSSettings: {
-      OSiOSSettings.autoPrompt: true,
-      OSiOSSettings.inAppLaunchUrl: false
-    });
+    OneSignal.shared.setAppId("4f82f3b1-777e-4b3d-a3cb-47f8a5585044");
+    OneSignal.shared.promptUserForPushNotificationPermission();
   }
 
   EquatableConfig.stringify = kDebugMode;
-  Bloc.observer = SumobotObserver();
+  //Bloc.observer = SumobotObserver();
   runApp(App(authenticationRepository: AuthenticationRepository()));
 }

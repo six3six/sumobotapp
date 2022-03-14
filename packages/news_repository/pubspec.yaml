@@ -3,18 +3,17 @@ description: Dart package which manages the news domain.
 version: 1.0.0
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  equatable: ^1.2.5
-  html_unescape: ^1.0.2
+  equatable: ^2.0.3
+  html_unescape: ^2.0.0
 
-  webfeed: ^0.6.0
-  http: ^0.12.2
+  webfeed: ^0.7.0
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^4.0.0

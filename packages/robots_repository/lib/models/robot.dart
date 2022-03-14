@@ -6,13 +6,11 @@ import '../entities/robot_entity.dart';
 
 class Robot extends Equatable {
   const Robot({
-    @required this.owner,
-    @required this.name,
-    @required this.uid,
-    @required this.edition,
-  })  : assert(uid != null),
-        assert(name != null),
-        assert(owner != null);
+    required this.owner,
+    required this.name,
+    required this.uid,
+    required this.edition,
+  });
 
   final User owner;
   final String name;
@@ -28,7 +26,6 @@ class Robot extends Equatable {
 
   static Future<Robot> fromEntity(RobotEntity entity, Edition edition,
       AuthenticationRepository authenticationRepository) async {
-
     return Robot(
       uid: entity.id,
       name: entity.name,
@@ -36,12 +33,11 @@ class Robot extends Equatable {
       edition: edition,
     );
   }
-  
-  RobotEntity toEntity(){
+
+  RobotEntity toEntity() {
     return RobotEntity(uid, name, owner.id);
   }
 
   @override
   List<Object> get props => [owner, name, uid, edition];
-
 }

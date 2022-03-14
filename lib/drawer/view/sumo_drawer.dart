@@ -1,13 +1,13 @@
+import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sumobot/account/view/account_page.dart';
 import 'package:sumobot/authentication/bloc/authentication_bloc.dart';
 import 'package:sumobot/editions/views/editions_page.dart';
-import 'package:sumobot/news/view/news_page.dart';
 import 'package:sumobot/map/view/map_page.dart';
+import 'package:sumobot/news/view/news_page.dart';
 import 'package:sumobot/robot/view/robot_page.dart';
-import 'package:barcode_scan_fix/barcode_scan.dart';
 
 class SumoDrawer extends StatelessWidget {
   @override
@@ -28,9 +28,10 @@ class SumoDrawer extends StatelessWidget {
                     return Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage: state.user.photo != null
-                              ? NetworkImage(state.user.photo)
-                              : AssetImage("assets/fake_avatar.png"),
+                          backgroundImage: ((state.user.photo != "null")
+                                  ? NetworkImage(state.user.photo ?? "")
+                                  : AssetImage("assets/fake_avatar.png"))
+                              as ImageProvider<Object>,
                           radius: 35,
                         ),
                         SizedBox(
@@ -72,11 +73,13 @@ class SumoDrawer extends StatelessWidget {
                       icon: const Icon(Icons.scanner),
                       onTap: () async {
                         var result = await BarcodeScanner.scan();
-                        List<String> data = result.split(";");
-                        if (data.length != 3 || data[0] != "SUMOCODE")
-                          return Scaffold.of(context).showSnackBar(SnackBar(
+                        List<String> data = result.rawContent.split(";");
+                        if (data.length != 3 || data[0] != "SUMOCODE") {
+                          Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text("Ceci n'est pas un code SUMOBOT"),
                           ));
+                          return;
+                        }
                         final route = RobotPage.route(
                           data[1],
                           data[2],
@@ -97,7 +100,7 @@ class SumoDrawer extends StatelessWidget {
             name: "Déconnexion",
             icon: const Icon(Icons.directions_run),
             onTap: () => context
-                .bloc<AuthenticationBloc>()
+                .read<AuthenticationBloc>()
                 .add(AuthenticationLogoutRequested()),
           ),
         ],
@@ -111,9 +114,12 @@ class _DrawerTile extends StatelessWidget {
   final Icon icon;
   final GestureTapCallback onTap;
 
-  const _DrawerTile(
-      {Key key, @required this.name, @required this.icon, @required this.onTap})
-      : super(key: key);
+  const _DrawerTile({
+    Key? key,
+    required this.name,
+    required this.icon,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
